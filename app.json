@@ -42,9 +42,11 @@
         }
       ]
     ],
+    
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true
+      "reactCompiler": true,
+      "baseUrl": "/gdef"
     },
     "extra": {
       "router": {},
