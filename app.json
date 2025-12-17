@@ -24,6 +24,7 @@
       "package": "com.jcommaret.GDEF"
     },
     "web": {
+      "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png",
       "baseUrl" : "/gdef",
