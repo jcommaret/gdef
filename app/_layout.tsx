@@ -1,24 +1,40 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Stack } from "expo-router";
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import DictionnaireProvider from './contexts/DictionnaireContext';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+// Empêcher la disparition automatique du splash screen
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  useEffect(() => {
+    // Masquer le splash screen une fois que le layout est prêt
+    const hideSplashScreen = async () => {
+      try {
+        await SplashScreen.hideAsync();
+      } catch (error) {
+        console.warn('Erreur lors de la suppression du splash screen:', error);
+      }
+    };
+
+    // Petit délai pour s'assurer que tout est rendu
+    const timer = setTimeout(hideSplashScreen, 500);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <DictionnaireProvider>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+        <Stack.Screen
+          name="index"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="screens/DetailMot"
+          options={{ headerShown: true }}
+        />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    </DictionnaireProvider>
   );
 }

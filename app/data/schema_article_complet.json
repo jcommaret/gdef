@@ -1,0 +1,250 @@
+{
+  "_description": "Schéma JSON pour un article de dictionnaire estonien-français",
+  "_cardinalites": {
+    "0..1": "Optionnel (peut être absent)",
+    "1": "Obligatoire (toujours présent)",
+    "0..n": "Liste (peut être vide ou contenir plusieurs éléments)",
+    "1..n": "Liste non vide (au moins un élément)"
+  },
+  
+  "article": {
+    "_cardinalite": "1",
+    
+    "vedette": {
+      "_cardinalite": "1",
+      "mot": {
+        "_type": "string",
+        "_cardinalite": "1"
+      },
+      "variante": {
+        "_type": "string", 
+        "_cardinalite": "0..1"
+      },
+      "type": {
+        "_type": "string",
+        "_cardinalite": "0..1"
+      },
+      "particule": {
+        "_type": "string",
+        "_cardinalite": "0..1"
+      },
+      "hm": {
+        "_type": "string",
+        "_cardinalite": "0..1"
+      },
+      "bloc-morph": {
+        "_cardinalite": "0..1",
+        "flexion": {
+          "_type": "string",
+          "_cardinalite": "0..1"
+        },
+        "formes": {
+          "_type": "string",
+          "_cardinalite": "0..1"
+        }
+      },
+      "registre-vedette": {
+        "_type": "string",
+        "_cardinalite": "0..1"
+      },
+      "domaine-vedette": {
+        "_type": "string",
+        "_cardinalite": "0..1"
+      }
+    },
+    
+    "bloc-gram": {
+      "_cardinalite": "1",
+      "cat-gram": {
+        "_type": "string",
+        "_cardinalite": "0..1"
+      },
+      "registre-bloc-gram": {
+        "_type": "string",
+        "_cardinalite": "0..1"
+      },
+      "domaine-bloc-gram": {
+        "_type": "string",
+        "_cardinalite": "0..1"
+      },
+      
+      "blocs-semantiques": {
+        "_cardinalite": "0..n",
+        "_item": {
+          "indication-semantique-1": {
+            "_type": "string",
+            "_cardinalite": "0..1"
+          },
+          "registre-sens-ved": {
+            "_type": "string",
+            "_cardinalite": "0..1"
+          },
+          "domaine-bloc-semantique": {
+            "_type": "string",
+            "_cardinalite": "0..1"
+          },
+          
+          "sous-blocs-semantiques": {
+            "_cardinalite": "0..n",
+            "_item": {
+              "indication-semantique-2": {
+                "_type": "string",
+                "_cardinalite": "0..1"
+              },
+              
+              "blocs-contextuels": {
+                "_cardinalite": "0..n",
+                "_item": {
+                  "indication-contextuel": {
+                    "_type": "string",
+                    "_cardinalite": "0..1"
+                  },
+                  
+                  "blocs-equivalents": {
+                    "_cardinalite": "0..n",
+                    "_item": {
+                      "avant": {
+                        "_type": "string",
+                        "_cardinalite": "0..1"
+                      },
+                      "mot-princ": {
+                        "_type": "string",
+                        "_cardinalite": "0..1"
+                      },
+                      "apres": {
+                        "_type": "string",
+                        "_cardinalite": "0..1"
+                      },
+                      "registre-equiv": {
+                        "_type": "string",
+                        "_cardinalite": "0..1"
+                      },
+                      "rection-equiv": {
+                        "_cardinalite": "0..1",
+                        "rection-equiv-est": {
+                          "_type": "string",
+                          "_cardinalite": "0..1"
+                        },
+                        "rection-equiv-fra": {
+                          "_type": "string",
+                          "_cardinalite": "0..1"
+                        }
+                      },
+                      "explication": {
+                        "_type": "string",
+                        "_cardinalite": "0..1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          
+          "blocs-exemples": {
+            "_cardinalite": "0..n",
+            "_item": {
+              "exemples": {
+                "_cardinalite": "0..n",
+                "_item": {
+                  "proverbe-exemple-est": {
+                    "_type": "string",
+                    "_cardinalite": "0..1"
+                  },
+                  "exemple-est": {
+                    "_type": "string",
+                    "_cardinalite": "0..1"
+                  },
+                  "registre-exe-est": {
+                    "_type": "string",
+                    "_cardinalite": "0..1"
+                  },
+                  "domaine-exe-est": {
+                    "_type": "string",
+                    "_cardinalite": "0..1"
+                  },
+                  "bloc-traduction-exe": {
+                    "_cardinalite": "0..1",
+                    "indic-sem-exe": {
+                      "_type": "string",
+                      "_cardinalite": "0..1"
+                    },
+                    "proverbe-traduction-exe": {
+                      "_type": "string",
+                      "_cardinalite": "0..1"
+                    },
+                    "traduction-exe": {
+                      "_type": "string",
+                      "_cardinalite": "0..1"
+                    },
+                    "registre-trad-exe": {
+                      "_type": "string",
+                      "_cardinalite": "0..1"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "blocs-phraseologiques": {
+      "_cardinalite": "0..n",
+      "_item": {
+        "expression-est": {
+          "_type": "string",
+          "_cardinalite": "0..1"
+        },
+        "registre-expression-est": {
+          "_type": "string",
+          "_cardinalite": "0..1"
+        },
+        
+        "blocs-traduction-expr": {
+          "_cardinalite": "0..n",
+          "_item": {
+            "indic-sem-expr": {
+              "_type": "string",
+              "_cardinalite": "0..1"
+            },
+            "locution-traduction-expression": {
+              "_type": "string",
+              "_cardinalite": "0..1"
+            },
+            "traduction-expr": {
+              "_type": "string",
+              "_cardinalite": "0..1"
+            },
+            "registre-trad-expr": {
+              "_type": "string",
+              "_cardinalite": "0..1"
+            },
+            "rection-trad": {
+              "_cardinalite": "0..1",
+              "rection-trad-est": {
+                "_type": "string",
+                "_cardinalite": "0..1"
+              },
+              "rection-trad-fra": {
+                "_type": "string",
+                "_cardinalite": "0..1"
+              }
+            }
+          }
+        },
+        
+        "blocs-renvois": {
+          "_cardinalite": "0..n",
+          "_item": {
+            "renvoi-phraseol": {
+              "_type": "string",
+              "_cardinalite": "0..1"
+            }
+          }
+        }
+      }
+    }
+  }
+}

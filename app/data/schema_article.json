@@ -1,0 +1,95 @@
+{
+  "article": {
+    "vedette": {
+      "mot": "string",
+      "variante": "string",
+      "type": "string", 
+      "particule": "string",
+      "hm": "string",
+      "bloc-morph": {
+        "flexion": "string",
+        "formes": "string"
+      },
+      "registre-vedette": "string",
+      "domaine-vedette": "string"
+    },
+    "bloc-gram": {
+      "cat-gram": "string",
+      "registre-bloc-gram": "string",
+      "domaine-bloc-gram": "string",
+      "blocs-semantiques": [
+        {
+          "indication-semantique-1": "string",
+          "registre-sens-ved": "string",
+          "domaine-bloc-semantique": "string",
+          "sous-blocs-semantiques": [
+            {
+              "indication-semantique-2": "string",
+              "blocs-contextuels": [
+                {
+                  "indication-contextuel": "string",
+                  "blocs-equivalents": [
+                    {
+                      "avant": "string",
+                      "mot-princ": "string",
+                      "apres": "string",
+                      "registre-equiv": "string",
+                      "rection-equiv": {
+                        "rection-equiv-est": "string",
+                        "rection-equiv-fra": "string"
+                      },
+                      "explication": "string"
+                    }
+                  ]
+                }
+              ],
+              "blocs-exemples": [
+                {
+                  "exemples": [
+                    {
+                      "proverbe-exemple-est": "string",
+                      "exemple-est": "string",
+                      "registre-exe-est": "string",
+                      "domaine-exe-est": "string",
+                      "bloc-traduction-exe": {
+                        "indic-sem-exe": "string",
+                        "proverbe-traduction-exe": "string",
+                        "traduction-exe": "string",
+                        "registre-trad-exe": "string"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "blocs-phraseologiques": [
+      {
+        "expression-est": "string",
+        "registre-expression-est": "string",
+        "blocs-traduction-expr": [
+          {
+            "indic-sem-expr": "string",
+            "locution-traduction-expression": "string",
+            "traduction-expr": "string",
+            "registre-trad-expr": "string",
+            "rection-trad": {
+              "rection-trad-est": "string",
+              "rection-trad-fra": "string"
+            }
+          }
+        ],
+        "blocs-renvois": [
+          {
+            "renvoi-phraseol": "string"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+
