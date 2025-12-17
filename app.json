@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.jcommaret.GDEF1",
+      "bundleIdentifier": "com.jcommaret.GDEF3",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -46,8 +46,7 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true,
-      "baseUrl": "/gdef"
+      "reactCompiler": true
     },
     "extra": {
       "router": {},
