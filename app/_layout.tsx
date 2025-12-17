@@ -32,7 +32,7 @@ export default function RootLayout() {
         />
         <Stack.Screen
           name="screens/DetailMot"
-          options={{ headerShown: true }}
+          options={{ headerShown: false }}
         />
       </Stack>
     </DictionnaireProvider>

@@ -26,7 +26,8 @@
     "web": {
       "output": "static",
       "favicon": "./assets/images/favicon.png",
-      "baseUrl" : "/gdef"
+      "baseUrl" : "/gdef",
+      "assetPath": "/gdef/assets"
     },
     "plugins": [
       "expo-router",
