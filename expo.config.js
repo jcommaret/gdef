@@ -1,0 +1,62 @@
+module.exports = {
+  expo: {
+    name: "GDEF",
+    slug: "GDEF",
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/images/icon.png",
+    scheme: "gdef",
+    userInterfaceStyle: "automatic",
+    newArchEnabled: true,
+    ios: {
+      supportsTablet: true,
+      bundleIdentifier: "com.jcommaret.GDEF3",
+      infoPlist: {
+        ITSAppUsesNonExemptEncryption: false
+      }
+    },
+    android: {
+      adaptiveIcon: {
+        backgroundColor: "#E6F4FE"
+      },
+      edgeToEdgeEnabled: true,
+      predictiveBackGestureEnabled: false,
+      package: "com.jcommaret.GDEF"
+    },
+    web: {
+      output: "static",
+      favicon: "./assets/images/favicon.png",
+      build: {
+        baseUrl: "/gdef",
+        publicUrl: "/gdef",
+        assetPrefix: "/gdef"
+      }
+    },
+    plugins: [
+      "expo-router",
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          image: "./assets/images/splash-icon.png",
+          imageWidth: 200,
+          resizeMode: "contain",
+          backgroundColor: "#ffffff",
+          dark: {
+            backgroundColor: "#000000"
+          }
+        }
+      ]
+    ],
+    experiments: {
+      typedRoutes: true,
+      reactCompiler: true
+    },
+    extra: {
+      router: {},
+      eas: {
+        projectId: "e073a112-3a40-4441-ac43-0fb0cec8462d"
+      }
+    }
+  }
+};

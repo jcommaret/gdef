@@ -2,9 +2,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
 import { Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+import { Vedette as VedetteType } from '../../src/types/mots';
 import { useDictionnaire } from '../contexts/DictionnaireContext';
 import { globalStyles } from "../styles";
-import { Vedette as VedetteType } from '../../src/types/mots';
 
 // Interface Vedette étendue pour inclure les propriétés supplémentaires
 interface Vedette extends VedetteType {
