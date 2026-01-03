@@ -1,7 +1,6 @@
 {
   "name": "gdef",
   "main": "expo-router/entry",
-  "homepage": "https://jcommaret.github.io/gdef",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
@@ -10,9 +9,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest --watchAll",
-    "build": "expo export && node scripts/fix-paths.js",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "build": "expo export"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -46,7 +43,6 @@
     "@types/react": "~19.1.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
-    "gh-pages": "^6.3.0",
     "typescript": "~5.9.2"
   },
   "private": true
