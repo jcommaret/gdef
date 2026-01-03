@@ -1,0 +1,15 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8" /><meta httpEquiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1, user-scalable=yes, viewport-fit=cover" /><link rel="icon" href="/gdef/favicon.ico" /><meta name="theme-color" content="#E6F4FE" /><link rel="manifest" href="/gdef/manifest.json" /><title>GDEF</title><style>#root,body,html{width:100%;-webkit-overflow-scrolling:touch;margin:0;padding:0;min-height:100%}#root{flex-shrink:0;flex-basis:auto;flex-grow:1;display:flex;flex:1}html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;height:calc(100% + env(safe-area-inset-top))}body{display:flex;overflow-y:auto;overscroll-behavior-y:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-ms-overflow-style:scrollbar}</style></head><body><script>
+// Single Page Apps for GitHub Pages
+// https://github.com/rafgraph/spa-github-pages
+// Redirection du routing pour GitHub Pages
+(function(l) {
+  if (l.search[1] === '/' ) {
+    var decoded = l.search.slice(1).split('&').map(function(s) { 
+      return s.replace(/~and~/g, '&')
+    }).join('?');
+    window.history.replaceState(null, null,
+        l.pathname.slice(0, -1) + decoded + l.hash
+    );
+  }
+}(window.location))
+</script><noscript>Vous devez activer JavaScript pour exécuter cette application.</noscript><div id="root"></div><script src="/gdef/assets/entry.js" defer></script></body></html>
