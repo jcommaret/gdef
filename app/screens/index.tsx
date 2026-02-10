@@ -171,20 +171,9 @@ function ListeMots() {
               )}
             </View>
             {equivalentsWithContext.length > 0 && (
-              <View style={{ marginTop: 2 }}>
-                {equivalentsWithContext.map((context, idx) => (
-                  <View key={idx} style={{ marginBottom: 2 }}>
-                    {context.indication && (
-                      <Text style={{ fontSize: 12, color: '#666', fontStyle: 'italic' }}>
-                        {context.indication}
-                      </Text>
-                    )}
-                    <Text style={{ fontSize: 13, color: '#007AFF' }}>
-                      {context.equivalents.join(', ')}
-                    </Text>
-                  </View>
-                ))}
-              </View>
+              <Text style={{ marginTop: 2, fontSize: 13, color: '#007AFF' }}>
+                {equivalentsWithContext.map(context => context.equivalents).flat().join(', ')}
+              </Text>
             )}
           </View>
 
