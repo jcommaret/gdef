@@ -5,37 +5,7 @@ import { ActivityIndicator, FlatList, Platform, Text, TextInput, TouchableOpacit
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDictionnaire } from '../contexts/DictionnaireContext';
 import { globalStyles } from "../styles";
-
-// Interface Vedette pour les propriétés de la vedette
-interface Vedette {
-  mot: string;
-  variante?: string;
-  type?: string;
-  particule?: string;
-  hm?: string;
-  "bloc-morph"?: any;
-  "registre-vedette"?: string;
-  "domaine-vedette"?: string;
-  grammaire?: any;
-  [key: string]: any;
-}
-
-// Interface pour les blocs grammaticaux
-interface BlocGram {
-  'cat-gram'?: string;
-  'registre-bloc-gram'?: string;
-  'domaine-bloc-gram'?: string;
-  'blocs-semantiques'?: any[];
-  [key: string]: any;
-}
-
-// Interface Article complète
-interface ArticleV2 {
-  id: string;
-  vedette: Vedette;
-  'bloc-gram'?: BlocGram;
-  [key: string]: any;
-}
+import { Article } from '../types/dictionary';
 
 const ITEMS_PER_LOAD = 100; // Nombre d'éléments à charger à chaque fois
 
@@ -43,7 +13,7 @@ function ListeMots() {
   const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [displayedArticles, setDisplayedArticles] = useState<ArticleV2[]>([]);
+  const [displayedArticles, setDisplayedArticles] = useState<Article[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const styles = globalStyles(false);
@@ -88,7 +58,7 @@ function ListeMots() {
   const filteredArticles = useMemo(() => {
     if (!searchText) return displayedArticles;
     const searchLower = searchText.toLowerCase();
-    return sortedArticles.filter((article: ArticleV2) =>
+    return sortedArticles.filter((article: Article) =>
       article.vedette.mot.toLowerCase().startsWith(searchLower)
     );
   }, [sortedArticles, displayedArticles, searchText]);
@@ -101,7 +71,7 @@ function ListeMots() {
     }
   }, [sortedArticles]);
 
-  const handlePress = useCallback((article: ArticleV2) => {
+  const handlePress = useCallback((article: Article) => {
     router.push({ pathname: "/screens/DetailMot", params: { articleId: article.id } });
   }, [router]);
 
@@ -114,7 +84,7 @@ function ListeMots() {
   }, [sortedArticles]);
 
   // Fonction pour récupérer les équivalents par contexte (hors composant pour optimisation)
-  const getEquivalentsWithContext = (article: ArticleV2): Array<{indication: string, equivalents: string[]}> => {
+  const getEquivalentsWithContext = (article: Article): Array<{indication: string, equivalents: string[]}> => {
     const contexts: Array<{indication: string, equivalents: string[]}> = [];
     const blocs = article['bloc-gram']?.['blocs-semantiques'] || [];
     
@@ -150,8 +120,8 @@ function ListeMots() {
 
   // Composant mémoïsé pour les items de la liste
   const ListeItem = React.memo(({ item, onPress, itemStyle }: { 
-    item: ArticleV2; 
-    onPress: (article: ArticleV2) => void;
+    item: Article; 
+    onPress: (article: Article) => void;
     itemStyle: any;
   }) => {
     const displayText = item.vedette.particule 
@@ -192,7 +162,7 @@ function ListeMots() {
     );
   });
 
-  const renderItem = useCallback(({ item }: { item: ArticleV2 }) => (
+  const renderItem = useCallback(({ item }: { item: Article }) => (
     <ListeItem item={item} onPress={handlePress} itemStyle={styles.itemText} />
   ), [handlePress, styles.itemText]);
 

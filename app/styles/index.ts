@@ -10,6 +10,10 @@ export interface Styles {
   itemText: TextStyle;
   searchContainer: ViewStyle;
   searchBar: ViewStyle;
+  searchIcon: ViewStyle;
+  searchInput: TextStyle;
+  clearButton: ViewStyle;
+  listContent: ViewStyle;
   footerContainer: ViewStyle;
   itemContainer: ViewStyle;
   itemLeftColumn: ViewStyle;
@@ -71,6 +75,21 @@ export const globalStyles = (isDarkMode: boolean) => StyleSheet.create({
     borderColor: 'rgba(200, 200, 200, 0.6)',
     boxShadow: '0px 2px 8px rgba(0,0,0,0.1)',
     elevation: 2,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    fontSize: 16,
+    color: '#000',
+  },
+  clearButton: {
+    padding: 4,
+  },
+  listContent: {
+    paddingBottom: 16,
   },
   itemText: {
     backgroundColor: 'rgba(255, 255, 255, 0.92)',

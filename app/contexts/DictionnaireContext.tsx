@@ -1,36 +1,6 @@
 import React, { createContext, ReactNode, useContext, useMemo } from 'react';
 import dictionnaire from '../data/dictionnaire.json';
-
-// Interface Vedette pour les propriétés de la vedette
-interface Vedette {
-  mot: string;
-  variante?: string;
-  type?: string;
-  particule?: string;
-  hm?: string;
-  "bloc-morph"?: any;
-  "registre-vedette"?: string;
-  "domaine-vedette"?: string;
-  grammaire?: any;
-  [key: string]: any;
-}
-
-// Interface pour les blocs grammaticaux
-interface BlocGram {
-  'cat-gram'?: string;
-  'registre-bloc-gram'?: string;
-  'domaine-bloc-gram'?: string;
-  'blocs-semantiques'?: any[];
-  [key: string]: any;
-}
-
-// Interface Article complète
-interface Article {
-  id: string;
-  vedette: Vedette;
-  'bloc-gram'?: BlocGram;
-  [key: string]: any;
-}
+import { Article } from '../types/dictionary';
 
 interface DictionnaireContextType {
   articles: Article[];
