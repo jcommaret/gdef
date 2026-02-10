@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import DictionnaireProvider from './contexts/DictionnaireContext';
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import DictionnaireProvider from "./contexts/DictionnaireContext";
 
 // Empêcher la disparition automatique du splash screen
 SplashScreen.preventAutoHideAsync();
@@ -13,13 +13,13 @@ export default function RootLayout() {
       try {
         await SplashScreen.hideAsync();
       } catch (error) {
-        console.warn('Erreur lors de la suppression du splash screen:', error);
+        console.warn("Erreur lors de la suppression du splash screen:", error);
       }
     };
 
     // Petit délai pour s'assurer que tout est rendu
     const timer = setTimeout(hideSplashScreen, 500);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -28,11 +28,11 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen
           name="index"
-          options={{ headerShown: false }}
+          options={{ headerShown: false, title: "" }}
         />
         <Stack.Screen
           name="screens/DetailMot"
-          options={{ headerShown: false }}
+          options={{ headerShown: true, title: "Détail du mot" }}
         />
       </Stack>
     </DictionnaireProvider>

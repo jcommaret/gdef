@@ -107,41 +107,39 @@ function ListeMots() {
     }
   }, [sortedArticles]);
 
-  // Fonction pour récupérer les équivalents (hors composant pour optimisation)
-  const getEquivalents = (article: ArticleV2): string[] => {
-    const out: string[] = [];
-    const seen = new Set<string>();
+  // Fonction pour récupérer les équivalents par contexte (hors composant pour optimisation)
+  const getEquivalentsWithContext = (article: ArticleV2): Array<{indication: string, equivalents: string[]}> => {
+    const contexts: Array<{indication: string, equivalents: string[]}> = [];
     const blocs = article['bloc-gram']?.['blocs-semantiques'] || [];
+    
     blocs.forEach((bloc: any) => {
-      const sous = bloc['sous-blocs-semantiques'] || [];
-      sous.forEach((sb: any) => {
-        const ctxs = sb['blocs-contextuels'] || [];
-        ctxs.forEach((ctx: any) => {
-          const eqs = ctx['blocs-equivalents'] || [];
-          eqs.forEach((eq: any) => {
+      bloc['sous-blocs-semantiques']?.forEach((sb: any) => {
+        sb['blocs-contextuels']?.forEach((ctx: any) => {
+          const indication = ctx['indication-contextuel'] || '';
+          const contexteEquivalents: string[] = [];
+          
+          ctx['blocs-equivalents']?.forEach((eq: any) => {
             const motFr = eq['article-francais']?.vedette?.mot;
+            
             if (motFr) {
-              // Équivalent avec mot-princ
+              // Équivalent avec mot-princ (sans genre-nbr dans l'index)
               const equivalent = (eq.avant ? `${eq.avant} ` : '') + motFr + (eq.apres ? ` ${eq.apres}` : '');
-              const key = (eq.avant || '') + motFr + (eq.apres || '');
-              if (!seen.has(key)) {
-                seen.add(key);
-                out.push(equivalent);
-              }
+              contexteEquivalents.push(equivalent);
             } else if (eq.avant || eq.apres) {
               // Équivalent sans mot-princ mais avec avant ou apres
               const equivalent = (eq.avant || '') + (eq.apres ? ` ${eq.apres}` : '');
-              const key = equivalent;
-              if (equivalent && !seen.has(key)) {
-                seen.add(key);
-                out.push(equivalent);
-              }
+              if (equivalent) contexteEquivalents.push(equivalent);
             }
           });
+          
+          if (contexteEquivalents.length > 0) {
+            contexts.push({ indication, equivalents: contexteEquivalents });
+          }
         });
       });
     });
-    return out;
+    
+    return contexts;
   };
 
   // Composant mémoïsé pour les items de la liste
@@ -154,7 +152,7 @@ function ListeMots() {
       ? `${item.vedette.particule} ${item.vedette.mot}` 
       : item.vedette.mot;
     const catGram = item['bloc-gram']?.['cat-gram'];
-    const equivalentsList = getEquivalents(item);
+    const equivalentsWithContext = getEquivalentsWithContext(item);
 
     return (
       <TouchableOpacity 
@@ -172,10 +170,21 @@ function ListeMots() {
                 </Text>
               )}
             </View>
-            {equivalentsList.length > 0 && (
-              <Text style={{ marginTop: 2, fontSize: 13, color: '#007AFF' }}>
-                {equivalentsList.join(', ')}
-              </Text>
+            {equivalentsWithContext.length > 0 && (
+              <View style={{ marginTop: 2 }}>
+                {equivalentsWithContext.map((context, idx) => (
+                  <View key={idx} style={{ marginBottom: 2 }}>
+                    {context.indication && (
+                      <Text style={{ fontSize: 12, color: '#666', fontStyle: 'italic' }}>
+                        {context.indication}
+                      </Text>
+                    )}
+                    <Text style={{ fontSize: 13, color: '#007AFF' }}>
+                      {context.equivalents.join(', ')}
+                    </Text>
+                  </View>
+                ))}
+              </View>
             )}
           </View>
 

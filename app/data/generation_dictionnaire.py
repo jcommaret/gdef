@@ -31,6 +31,20 @@ def extract_bloc_morph(bloc_morph_elem):
     
     return morph_data if morph_data else None
 
+def extract_grammaire(grammaire_elem):
+    """Extrait les données grammaticales (cat-gram, genre-nbr, etc.)."""
+    if grammaire_elem is None:
+        return None
+    
+    gram_data = {}
+    for child in grammaire_elem:
+        tag = get_tag_name(child)
+        text = extract_text_safely(child)
+        # Inclure même les valeurs vides pour préserver la structure
+        gram_data[tag] = text if text is not None else ''
+    
+    return gram_data if gram_data else None
+
 def extract_vedette(vedette_elem):
     """Extrait la vedette selon le schéma formalisé."""
     if vedette_elem is None:
@@ -46,6 +60,10 @@ def extract_vedette(vedette_elem):
             morph_data = extract_bloc_morph(child)
             if morph_data:
                 vedette_data['bloc-morph'] = morph_data
+        elif tag == 'grammaire':
+            gram_data = extract_grammaire(child)
+            if gram_data:
+                vedette_data['grammaire'] = gram_data
         elif text:
             vedette_data[tag] = text
     
