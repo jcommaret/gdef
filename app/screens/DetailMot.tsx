@@ -2,33 +2,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-import { Vedette as VedetteType } from "../../src/types/mots";
 import { useDictionnaire } from "../contexts/DictionnaireContext";
 import { globalStyles } from "../styles";
-
-// Interface Vedette étendue pour inclure les propriétés supplémentaires
-interface Vedette extends VedetteType {
-  "registre-vedette"?: string;
-  "domaine-vedette"?: string;
-  [key: string]: any; // Pour les propriétés dynamiques
-}
-
-// Interface pour les blocs grammaticaux
-interface BlocGram {
-  "cat-gram"?: string;
-  "registre-bloc-gram"?: string;
-  "domaine-bloc-gram"?: string;
-  "blocs-semantiques"?: any[];
-  [key: string]: any; // Pour les propriétés dynamiques
-}
-
-// Interface Article complète
-interface Article {
-  id: string;
-  vedette: Vedette;
-  "bloc-gram"?: BlocGram;
-  [key: string]: any; // Pour les propriétés dynamiques supplémentaires
-}
 
 function DetailMot() {
   const params = useLocalSearchParams();
@@ -66,9 +41,6 @@ function DetailMot() {
       </ScrollView>
     );
   }
-
-  // Les références sont déjà résolues dans le nouveau format
-  // Plus besoin de fonction resolveMot
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16 }}>
@@ -111,7 +83,7 @@ function DetailMot() {
 
         {/* Morphologie - bloc-morph */}
         {fullArticle.vedette["bloc-morph"] && (
-          <View style={{ marginTop: 8 }}>
+          <View style={style.blocMorphContainer}>
             {fullArticle.vedette["bloc-morph"].formes && (
               <Text style={style.text}>
                 {(() => {
@@ -175,32 +147,12 @@ function DetailMot() {
         <View style={[style.blocGramContainer, { padding: 16 }]}>
           {/* Informations du bloc grammatical */}
           {fullArticle["bloc-gram"]["registre-bloc-gram"] && (
-            <Text
-              style={[
-                style.text,
-                {
-                  fontSize: 12,
-                  color: "#666",
-                  fontStyle: "italic",
-                  marginBottom: 4,
-                },
-              ]}
-            >
+            <Text style={[style.text, style.registreBlocGram]}>
               Registre: {fullArticle["bloc-gram"]["registre-bloc-gram"]}
             </Text>
           )}
           {fullArticle["bloc-gram"]["domaine-bloc-gram"] && (
-            <Text
-              style={[
-                style.text,
-                {
-                  fontSize: 12,
-                  color: "#666",
-                  fontStyle: "italic",
-                  marginBottom: 8,
-                },
-              ]}
-            >
+            <Text style={[style.text, style.domaineBlocGram]}>
               Domaine: {fullArticle["bloc-gram"]["domaine-bloc-gram"]}
             </Text>
           )}
@@ -254,20 +206,11 @@ function DetailMot() {
                       (sousBloc: any, sousIndex: number) => (
                         <View
                           key={sousIndex}
-                          style={{ marginLeft: 16, marginBottom: 8 }}
+                          style={style.sousBlocSemantiqueContainer}
                         >
                           {/* Indication sémantique niveau 2 */}
                           {sousBloc["indication-semantique-2"] && (
-                            <Text
-                              style={[
-                                style.text,
-                                {
-                                  fontStyle: "italic",
-                                  marginBottom: 4,
-                                  fontWeight: "500",
-                                },
-                              ]}
-                            >
+                            <Text style={[style.text, style.sousBlocIndication2]}>
                               {sousBloc["indication-semantique-2"]}
                             </Text>
                           )}
@@ -278,29 +221,12 @@ function DetailMot() {
                               (blocContextuel: any, contextIndex: number) => (
                                 <View
                                   key={contextIndex}
-                                  style={{
-                                    marginLeft: 16,
-                                    marginBottom: 6,
-                                    borderLeftWidth: 2,
-                                    borderLeftColor: "#E0E0E0",
-                                    paddingLeft: 8,
-                                  }}
+                                  style={style.blocContextuelContainer}
                                 >
                                   {/* Indication contextuelle */}
                                   {blocContextuel["indication-contextuel"] && (
-                                    <Text
-                                      style={[
-                                        style.text,
-                                        {
-                                          fontStyle: "italic",
-                                          fontSize: 14,
-                                          color: "#666",
-                                          marginBottom: 3,
-                                        },
-                                      ]}
-                                    >
-                                      •{" "}
-                                      {blocContextuel["indication-contextuel"]}
+                                    <Text style={[style.text, style.indicationContextuelle]}>
+                                      • {blocContextuel["indication-contextuel"]}
                                     </Text>
                                   )}
 
@@ -308,16 +234,7 @@ function DetailMot() {
                                   {blocContextuel["blocs-equivalents"] &&
                                     blocContextuel["blocs-equivalents"].length >
                                       0 && (
-                                      <Text
-                                        style={[
-                                          style.text,
-                                          {
-                                            color: "#007AFF",
-                                            fontSize: 16,
-                                            paddingLeft: 8,
-                                          },
-                                        ]}
-                                      >
+                                      <Text style={[style.text, style.equivalentsFrancais]}>
                                         {blocContextuel["blocs-equivalents"]
                                           .map((equiv: any, idx: number) => {
                                             const parts = [];
@@ -544,22 +461,13 @@ function DetailMot() {
                   {/* Traductions */}
                   {expr["blocs-traduction-expr"] &&
                     expr["blocs-traduction-expr"].length > 0 && (
-                      <View style={{ marginLeft: 8 }}>
+                      <View style={style.traductionExpressionContainer}>
                         {expr["blocs-traduction-expr"].map(
                           (trad: any, tradIndex: number) => (
-                            <View key={tradIndex} style={{ marginBottom: 4 }}>
+                            <View key={tradIndex} style={style.traductionExpressionItem}>
                               {/* Indication sémantique de l'expression */}
                               {trad["indic-sem-expr"] && (
-                                <Text
-                                  style={[
-                                    style.text,
-                                    {
-                                      fontSize: 12,
-                                      color: "#666",
-                                      fontStyle: "italic",
-                                    },
-                                  ]}
-                                >
+                                <Text style={[style.text, style.indicationSemExpr]}>
                                   {trad["indic-sem-expr"]}
                                 </Text>
                               )}
@@ -641,17 +549,8 @@ function DetailMot() {
                   {/* Renvois phraséologiques */}
                   {expr["blocs-renvois"] &&
                     expr["blocs-renvois"].length > 0 && (
-                      <View style={{ marginLeft: 8 }}>
-                        <Text
-                          style={[
-                            style.text,
-                            {
-                              fontSize: 12,
-                              color: "#666",
-                              fontStyle: "italic",
-                            },
-                          ]}
-                        >
+                      <View style={style.renvoiContainer}>
+                        <Text style={[style.text, style.renvoiText]}>
                           Renvois:{" "}
                           {expr["blocs-renvois"]
                             .map((renvoi: any) => renvoi["renvoi-phraseol"])

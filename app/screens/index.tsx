@@ -5,13 +5,19 @@ import { ActivityIndicator, FlatList, Platform, Text, TextInput, TouchableOpacit
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDictionnaire } from '../contexts/DictionnaireContext';
 import { globalStyles } from "../styles";
-import { Vedette as VedetteType } from '../../src/types/mots';
 
-// Interface Vedette étendue pour inclure les propriétés supplémentaires
-interface Vedette extends VedetteType {
-  'registre-vedette'?: string;
-  'domaine-vedette'?: string;
-  [key: string]: any; // Pour les propriétés dynamiques
+// Interface Vedette pour les propriétés de la vedette
+interface Vedette {
+  mot: string;
+  variante?: string;
+  type?: string;
+  particule?: string;
+  hm?: string;
+  "bloc-morph"?: any;
+  "registre-vedette"?: string;
+  "domaine-vedette"?: string;
+  grammaire?: any;
+  [key: string]: any;
 }
 
 // Interface pour les blocs grammaticaux
@@ -20,7 +26,7 @@ interface BlocGram {
   'registre-bloc-gram'?: string;
   'domaine-bloc-gram'?: string;
   'blocs-semantiques'?: any[];
-  [key: string]: any; // Pour les propriétés dynamiques
+  [key: string]: any;
 }
 
 // Interface Article complète
@@ -28,7 +34,7 @@ interface ArticleV2 {
   id: string;
   vedette: Vedette;
   'bloc-gram'?: BlocGram;
-  [key: string]: any; // Pour les propriétés dynamiques supplémentaires
+  [key: string]: any;
 }
 
 const ITEMS_PER_LOAD = 100; // Nombre d'éléments à charger à chaque fois
@@ -159,19 +165,19 @@ function ListeMots() {
         style={itemStyle} 
         onPress={() => onPress(item)}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+        <View style={styles.itemContainer}>
           {/* Colonne gauche: mot, cat-gram, équivalents */}
-          <View style={{ flexDirection: 'column', alignItems: 'flex-start', flex: 1, paddingRight: 12 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
-              <Text style={{ fontSize: 16 }}>{displayText}</Text>
+          <View style={styles.itemLeftColumn}>
+            <View style={styles.itemHeaderRow}>
+              <Text style={styles.itemMotText}>{displayText}</Text>
               {catGram && (
-                <Text style={{ fontSize: 12, color: '#666', fontStyle: 'italic', marginLeft: 8 }}>
+                <Text style={styles.itemCatGram}>
                   ({catGram})
                 </Text>
               )}
             </View>
             {equivalentsWithContext.length > 0 && (
-              <Text style={{ marginTop: 2, fontSize: 13, color: '#007AFF' }}>
+              <Text style={styles.itemEquivalents}>
                 {equivalentsWithContext.map(context => context.equivalents).flat().join(', ')}
               </Text>
             )}
@@ -179,7 +185,7 @@ function ListeMots() {
 
           {/* Colonne droite: + d'infos */}
           <TouchableOpacity onPress={() => onPress(item)} accessibilityRole="button" hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Text style={{ fontSize: 13, color: '000', fontWeight: 'bold' }}>+ d'infos</Text>
+            <Text style={styles.itemInfoButton}>+ d'infos</Text>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -197,29 +203,29 @@ function ListeMots() {
   const renderFooter = useCallback(() => {
     if (!isLoadingMore || searchText) return null;
     return (
-      <View style={{ padding: 20, alignItems: 'center' }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="small" color="#007AFF" />
-        <Text style={{ marginTop: 8, color: '#8E8E93' }}>Chargement de plus de mots...</Text>
+        <Text style={styles.loadingText}>Chargement de plus de mots...</Text>
       </View>
     );
-  }, [isLoadingMore, searchText]);
+  }, [isLoadingMore, searchText, styles]);
 
   if (isLoading || !isReady) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#f8f9fa', justifyContent: 'center', alignItems: 'center' }}>
+      <SafeAreaView style={styles.loadingFullScreen}>
         <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={{ marginTop: 10, fontSize: 16, color: '#8E8E93' }}>Chargement du dictionnaire...</Text>
+        <Text style={styles.loadingFullScreenText}>Chargement du dictionnaire...</Text>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f8f9fa' }}>
-      <View style={{ flex: 1, backgroundColor: '#f8f9fa' }}>
+    <SafeAreaView style={styles.mainContainer}>
+      <View style={styles.mainContainer}>
         <View style={styles.searchContainer}>
           <View style={styles.searchBar}>
             {Platform.OS === 'web' ? (
-              <Text style={{ marginRight: 8, color: "#8E8E93", fontSize: 16 }}>🔍</Text>
+              <Text style={styles.searchIconWeb}>🔍</Text>
             ) : (
               <Ionicons name="search" size={20} color="#8E8E93" style={styles.searchIcon} />
             )}
@@ -234,7 +240,7 @@ function ListeMots() {
             {searchText.length > 0 && (
               <TouchableOpacity onPress={handleReset} style={styles.clearButton}>
                 {Platform.OS === 'web' ? (
-                  <Text style={{ color: "#8E8E93", fontSize: 16 }}>✕</Text>
+                  <Text style={styles.clearIconWeb}>✕</Text>
                 ) : (
                   <Ionicons name="close-circle" size={20} color="#8E8E93" />
                 )}

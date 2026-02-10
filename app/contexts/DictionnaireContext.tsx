@@ -1,11 +1,18 @@
 import React, { createContext, ReactNode, useContext, useMemo } from 'react';
 import dictionnaire from '../data/dictionnaire.json';
 
-// Interface Vedette étendue pour inclure les propriétés supplémentaires
-interface Vedette extends VedetteType {
-  'registre-vedette'?: string;
-  'domaine-vedette'?: string;
-  [key: string]: any; // Pour les propriétés dynamiques
+// Interface Vedette pour les propriétés de la vedette
+interface Vedette {
+  mot: string;
+  variante?: string;
+  type?: string;
+  particule?: string;
+  hm?: string;
+  "bloc-morph"?: any;
+  "registre-vedette"?: string;
+  "domaine-vedette"?: string;
+  grammaire?: any;
+  [key: string]: any;
 }
 
 // Interface pour les blocs grammaticaux
@@ -14,7 +21,7 @@ interface BlocGram {
   'registre-bloc-gram'?: string;
   'domaine-bloc-gram'?: string;
   'blocs-semantiques'?: any[];
-  [key: string]: any; // Pour les propriétés dynamiques
+  [key: string]: any;
 }
 
 // Interface Article complète
@@ -22,7 +29,7 @@ interface Article {
   id: string;
   vedette: Vedette;
   'bloc-gram'?: BlocGram;
-  [key: string]: any; // Pour les propriétés dynamiques supplémentaires
+  [key: string]: any;
 }
 
 interface DictionnaireContextType {
@@ -78,6 +85,3 @@ export function useDictionnaire() {
   }
   return context;
 }
-
-
-
