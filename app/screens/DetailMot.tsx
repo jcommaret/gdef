@@ -211,7 +211,8 @@ function DetailMot() {
               (bloc: any, index: number) => (
                 <View key={index} style={style.blocSemantiqueContainer}>
                   {/* Indication sémantique principale */}
-                  {(bloc["indication-semantique-1"] || bloc["domaine-bloc-semantique"]) && (
+                  {(bloc["indication-semantique-1"] ||
+                    bloc["domaine-bloc-semantique"]) && (
                     <Text
                       style={[
                         style.text,
