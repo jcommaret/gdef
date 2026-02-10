@@ -46,13 +46,13 @@ function DetailMot() {
     <ScrollView contentContainerStyle={{ padding: 16 }}>
       {/* VEDETTE */}
       <View style={style.vedetteContainer}>
-        <Text style={style.text}>
+        <Text>
           {fullArticle.vedette.particule && (
             <Text style={style.vedetteParticule}>
               {fullArticle.vedette.particule}{" "}
             </Text>
           )}
-          {fullArticle.vedette.mot}
+          <Text style={style.itemMotText}>{fullArticle.vedette.mot}</Text>
           {fullArticle.vedette.hm && (
             <Text style={style.vedetteCatGram}> {fullArticle.vedette.hm}</Text>
           )}
@@ -210,7 +210,9 @@ function DetailMot() {
                         >
                           {/* Indication sémantique niveau 2 */}
                           {sousBloc["indication-semantique-2"] && (
-                            <Text style={[style.text, style.sousBlocIndication2]}>
+                            <Text
+                              style={[style.text, style.sousBlocIndication2]}
+                            >
                               {sousBloc["indication-semantique-2"]}
                             </Text>
                           )}
@@ -225,8 +227,14 @@ function DetailMot() {
                                 >
                                   {/* Indication contextuelle */}
                                   {blocContextuel["indication-contextuel"] && (
-                                    <Text style={[style.text, style.indicationContextuelle]}>
-                                      • {blocContextuel["indication-contextuel"]}
+                                    <Text
+                                      style={[
+                                        style.text,
+                                        style.indicationContextuelle,
+                                      ]}
+                                    >
+                                      •{" "}
+                                      {blocContextuel["indication-contextuel"]}
                                     </Text>
                                   )}
 
@@ -234,77 +242,67 @@ function DetailMot() {
                                   {blocContextuel["blocs-equivalents"] &&
                                     blocContextuel["blocs-equivalents"].length >
                                       0 && (
-                                      <Text style={[style.text, style.equivalentsFrancais]}>
-                                        {blocContextuel["blocs-equivalents"]
-                                          .map((equiv: any, idx: number) => {
-                                            const parts = [];
-                                            if (equiv.avant)
-                                              parts.push(equiv.avant);
+                                      <Text
+                                        style={[
+                                          style.text,
+                                          style.equivalentsFrancais,
+                                        ]}
+                                      >
+                                        {blocContextuel[
+                                          "blocs-equivalents"
+                                        ].map((equiv: any, idx: number) => (
+                                          <Text key={idx}>
+                                            {idx > 0 && ", "}
+                                            {equiv.avant && `${equiv.avant} `}
 
-                                            // Mot français avec genre-nbr
-                                            if (
-                                              equiv["article-francais"]?.vedette
-                                                ?.mot
-                                            ) {
-                                              const mot =
-                                                equiv["article-francais"]
-                                                  .vedette.mot;
-                                              const genreNbr =
-                                                equiv["article-francais"]
-                                                  ?.vedette?.grammaire?.[
-                                                  "genre-nbr"
-                                                ];
+                                            {/* Mot français */}
+                                            {equiv["article-francais"]?.vedette
+                                              ?.mot &&
+                                              equiv["article-francais"].vedette
+                                                .mot}
 
-                                              parts.push(mot);
-                                              if (genreNbr) {
-                                                parts.push(`(${genreNbr})`);
-                                              }
-                                            }
+                                            {/* Texte après (ex: "d'années") */}
+                                            {equiv.apres && ` ${equiv.apres}`}
 
-                                            if (equiv.apres)
-                                              parts.push(equiv.apres);
+                                            {/* Genre-nbr après le texte complet */}
+                                            {equiv["article-francais"]?.vedette
+                                              ?.grammaire?.["genre-nbr"] && (
+                                              <Text style={style.genreExposant}>
+                                                {" "}
+                                                (
+                                                {
+                                                  equiv["article-francais"]
+                                                    .vedette.grammaire[
+                                                    "genre-nbr"
+                                                  ]
+                                                }
+                                                )
+                                              </Text>
+                                            )}
 
-                                            // Afficher les informations de rection si disponibles
-                                            if (equiv["rection-equiv"]) {
-                                              if (
-                                                equiv["rection-equiv"][
+                                            {/* Afficher les informations de rection si disponibles */}
+                                            {equiv["rection-equiv"] && (
+                                              <>
+                                                {equiv["rection-equiv"][
                                                   "rection-equiv-est"
-                                                ]
-                                              ) {
-                                                parts.push(
-                                                  `[est: ${equiv["rection-equiv"]["rection-equiv-est"]}]`,
-                                                );
-                                              }
-                                              if (
-                                                equiv["rection-equiv"][
+                                                ] &&
+                                                  ` [est: ${equiv["rection-equiv"]["rection-equiv-est"]}]`}
+                                                {equiv["rection-equiv"][
                                                   "rection-equiv-fra"
-                                                ]
-                                              ) {
-                                                parts.push(
-                                                  `[fra: ${equiv["rection-equiv"]["rection-equiv-fra"]}]`,
-                                                );
-                                              }
-                                            }
+                                                ] &&
+                                                  ` [fra: ${equiv["rection-equiv"]["rection-equiv-fra"]}]`}
+                                              </>
+                                            )}
 
-                                            // Afficher l'explication si disponible
-                                            if (equiv.explication) {
-                                              parts.push(
-                                                `(${equiv.explication})`,
-                                              );
-                                            }
+                                            {/* Afficher l'explication si disponible */}
+                                            {equiv.explication &&
+                                              ` (${equiv.explication})`}
 
-                                            // Afficher le registre si disponible
-                                            if (equiv["registre-equiv"]) {
-                                              parts.push(
-                                                `[${equiv["registre-equiv"]}]`,
-                                              );
-                                            }
-
-                                            return parts
-                                              .filter(Boolean)
-                                              .join(" ");
-                                          })
-                                          .join(", ")}
+                                            {/* Afficher le registre si disponible */}
+                                            {equiv["registre-equiv"] &&
+                                              ` [${equiv["registre-equiv"]}]`}
+                                          </Text>
+                                        ))}
                                       </Text>
                                     )}
                                 </View>
@@ -464,10 +462,15 @@ function DetailMot() {
                       <View style={style.traductionExpressionContainer}>
                         {expr["blocs-traduction-expr"].map(
                           (trad: any, tradIndex: number) => (
-                            <View key={tradIndex} style={style.traductionExpressionItem}>
+                            <View
+                              key={tradIndex}
+                              style={style.traductionExpressionItem}
+                            >
                               {/* Indication sémantique de l'expression */}
                               {trad["indic-sem-expr"] && (
-                                <Text style={[style.text, style.indicationSemExpr]}>
+                                <Text
+                                  style={[style.text, style.indicationSemExpr]}
+                                >
                                   {trad["indic-sem-expr"]}
                                 </Text>
                               )}
