@@ -8,7 +8,7 @@ const COLORS = {
   secondary: "#666",
   tertiary: "#8E8E93",
   estonien: "#d73527",
-  francais: "#0066cc",
+  francais: "#007AFF",
   text: "#000",
   textLight: "#8E8E93",
   border: "rgba(0, 0, 0, 0.12)",
@@ -360,7 +360,7 @@ export const globalStyles = (isDarkMode: boolean) =>
       marginBottom: 8,
     },
     traductionExpressionContainer: {
-      marginLeft: 8,
+      marginBottom: 4,
     },
     traductionExpressionItem: {
       marginBottom: 4,
