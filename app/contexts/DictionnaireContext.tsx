@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext, useMemo } from 'react';
 import dictionnaire from '../data/dictionnaire.json';
-import { Article } from '../types/dictionary';
+import { Article } from '../_types/dictionary';
 
 interface DictionnaireContextType {
   articles: Article[];

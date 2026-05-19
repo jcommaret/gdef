@@ -242,43 +242,56 @@ def extract_bloc_semantique(bloc_sem_elem, french_index):
     
     return bloc_data if bloc_data else None, resolved_count
 
-def extract_bloc_gram(article_elem, french_index):
-    """Extrait le bloc grammatical selon le schéma."""
+def extract_single_bloc_gram(bloc_gram_elem, french_index):
+    """Extrait un bloc grammatical (cat-gram, registre, blocs sémantiques du bloc)."""
+    NS = '{http://www.estfra.ee/~gdef/xmlschema}'
     bloc_gram_data = {}
     resolved_count = 0
-    
-    # Catégorie grammaticale
-    cat_gram_elem = article_elem.find('.//{http://www.estfra.ee/~gdef/xmlschema}cat-gram')
+
+    cat_gram_elem = bloc_gram_elem.find(f'{NS}cat-gram')
     if cat_gram_elem is not None:
         cat_text = extract_text_safely(cat_gram_elem)
         if cat_text:
             bloc_gram_data['cat-gram'] = cat_text
-    
-    # Registre et domaine du bloc grammatical
-    registre_elem = article_elem.find('.//{http://www.estfra.ee/~gdef/xmlschema}registre-bloc-gram')
+
+    registre_elem = bloc_gram_elem.find(f'{NS}registre-bloc-gram')
     if registre_elem is not None:
         registre_text = extract_text_safely(registre_elem)
         if registre_text:
             bloc_gram_data['registre-bloc-gram'] = registre_text
-    
-    domaine_elem = article_elem.find('.//{http://www.estfra.ee/~gdef/xmlschema}domaine-bloc-gram')
+
+    domaine_elem = bloc_gram_elem.find(f'{NS}domaine-bloc-gram')
     if domaine_elem is not None:
         domaine_text = extract_text_safely(domaine_elem)
         if domaine_text:
             bloc_gram_data['domaine-bloc-gram'] = domaine_text
-    
-    # Blocs sémantiques
+
     blocs_semantiques = []
-    for bloc_sem_elem in article_elem.findall('.//{http://www.estfra.ee/~gdef/xmlschema}bloc-semantique'):
+    for bloc_sem_elem in bloc_gram_elem.findall(f'{NS}bloc-semantique'):
         bloc_data, resolved = extract_bloc_semantique(bloc_sem_elem, french_index)
         if bloc_data:
             blocs_semantiques.append(bloc_data)
             resolved_count += resolved
-    
+
     if blocs_semantiques:
         bloc_gram_data['blocs-semantiques'] = blocs_semantiques
-    
-    return bloc_gram_data, resolved_count
+
+    return bloc_gram_data if bloc_gram_data else None, resolved_count
+
+
+def extract_blocs_gram(article_elem, french_index):
+    """Extrait tous les blocs grammaticaux d'un article (un ou plusieurs)."""
+    NS = '{http://www.estfra.ee/~gdef/xmlschema}'
+    blocs_gram = []
+    resolved_total = 0
+
+    for bloc_gram_elem in article_elem.findall(f'{NS}bloc-gram'):
+        bloc_data, resolved = extract_single_bloc_gram(bloc_gram_elem, french_index)
+        if bloc_data:
+            blocs_gram.append(bloc_data)
+            resolved_total += resolved
+
+    return blocs_gram, resolved_total
 
 def extract_rection_trad(bloc_trad_elem):
     """Extrait les données de rection de traduction."""
@@ -424,10 +437,13 @@ def extract_estonian_articles(xml_file_path, french_index):
                     if freq_text:
                         article_data['frequence'] = freq_text
                 
-                # Bloc grammatical avec blocs sémantiques
-                bloc_gram_data, resolved = extract_bloc_gram(article_elem, french_index)
-                if bloc_gram_data:
-                    article_data['bloc-gram'] = bloc_gram_data
+                # Bloc(s) grammatical(aux) avec blocs sémantiques
+                blocs_gram, resolved = extract_blocs_gram(article_elem, french_index)
+                if blocs_gram:
+                    if len(blocs_gram) == 1:
+                        article_data['bloc-gram'] = blocs_gram[0]
+                    else:
+                        article_data['blocs-gram'] = blocs_gram
                     resolved_references += resolved
                 
                 # Blocs phraséologiques

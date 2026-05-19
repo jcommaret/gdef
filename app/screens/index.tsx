@@ -13,7 +13,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDictionnaire } from "../contexts/DictionnaireContext";
 import { globalStyles } from "../styles";
-import { Article } from "../types/dictionary";
+import { Article } from "../_types/dictionary";
+import { formatCatGramsDisplay, getBlocsGram } from "../_utils/blocsGram";
 
 const ITEMS_PER_LOAD = 100; // Nombre d'éléments à charger à chaque fois
 
@@ -108,35 +109,34 @@ function ListeMots() {
     article: Article,
   ): { indication: string; equivalents: string[] }[] => {
     const contexts: { indication: string; equivalents: string[] }[] = [];
-    const blocs = article["bloc-gram"]?.["blocs-semantiques"] || [];
+    getBlocsGram(article).forEach((blocGram) => {
+      const blocs = blocGram["blocs-semantiques"] || [];
+      blocs.forEach((bloc: any) => {
+        bloc["sous-blocs-semantiques"]?.forEach((sb: any) => {
+          sb["blocs-contextuels"]?.forEach((ctx: any) => {
+            const indication = ctx["indication-contextuel"] || "";
+            const contexteEquivalents: string[] = [];
 
-    blocs.forEach((bloc: any) => {
-      bloc["sous-blocs-semantiques"]?.forEach((sb: any) => {
-        sb["blocs-contextuels"]?.forEach((ctx: any) => {
-          const indication = ctx["indication-contextuel"] || "";
-          const contexteEquivalents: string[] = [];
+            ctx["blocs-equivalents"]?.forEach((eq: any) => {
+              const motFr = eq["article-francais"]?.vedette?.mot;
 
-          ctx["blocs-equivalents"]?.forEach((eq: any) => {
-            const motFr = eq["article-francais"]?.vedette?.mot;
+              if (motFr) {
+                const equivalent =
+                  (eq.avant ? `${eq.avant} ` : "") +
+                  motFr +
+                  (eq.apres ? ` ${eq.apres}` : "");
+                contexteEquivalents.push(equivalent);
+              } else if (eq.avant || eq.apres) {
+                const equivalent =
+                  (eq.avant || "") + (eq.apres ? ` ${eq.apres}` : "");
+                if (equivalent) contexteEquivalents.push(equivalent);
+              }
+            });
 
-            if (motFr) {
-              // Équivalent avec mot-princ (sans genre-nbr dans l'index)
-              const equivalent =
-                (eq.avant ? `${eq.avant} ` : "") +
-                motFr +
-                (eq.apres ? ` ${eq.apres}` : "");
-              contexteEquivalents.push(equivalent);
-            } else if (eq.avant || eq.apres) {
-              // Équivalent sans mot-princ mais avec avant ou apres
-              const equivalent =
-                (eq.avant || "") + (eq.apres ? ` ${eq.apres}` : "");
-              if (equivalent) contexteEquivalents.push(equivalent);
+            if (contexteEquivalents.length > 0) {
+              contexts.push({ indication, equivalents: contexteEquivalents });
             }
           });
-
-          if (contexteEquivalents.length > 0) {
-            contexts.push({ indication, equivalents: contexteEquivalents });
-          }
         });
       });
     });
@@ -158,7 +158,7 @@ function ListeMots() {
       const displayText = item.vedette.particule
         ? `${item.vedette.particule} ${item.vedette.mot}`
         : item.vedette.mot;
-      const catGram = item["bloc-gram"]?.["cat-gram"];
+      const catGram = formatCatGramsDisplay(item);
       const equivalentsWithContext = getEquivalentsWithContext(item);
 
       return (
@@ -173,9 +173,13 @@ function ListeMots() {
               {equivalentsWithContext.length > 0 && (
                 <Text style={styles.itemEquivalents}>
                   {equivalentsWithContext
-                    .map((context) => context.equivalents)
-                    .flat()
-                    .join(", ")}
+                    .map((context) => {
+                      const equivs = context.equivalents.join(", ");
+                      return context.indication
+                        ? `[${context.indication}] ${equivs}`
+                        : equivs;
+                    })
+                    .join(" · ")}
                 </Text>
               )}
             </View>

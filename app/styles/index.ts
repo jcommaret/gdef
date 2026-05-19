@@ -10,6 +10,8 @@ const COLORS = {
   estonien: "#d73527",
   francais: "#007AFF",
   text: "#000",
+  /** Noir plein pour les explications (éviter l’aspect grisé de l’italique système). */
+  explication: "#000000",
   textLight: "#8E8E93",
   border: "rgba(0, 0, 0, 0.12)",
   borderLight: "rgba(200, 200, 200, 0.5)",
@@ -55,12 +57,14 @@ export interface Styles {
   clearIconWeb: TextStyle;
   blocMorphContainer: ViewStyle;
   sousBlocSemantiqueContainer: ViewStyle;
-  sousBlocIndication2: TextStyle;
-  blocContextuelContainer: ViewStyle;
+  ligneEquivalents: TextStyle;
+  indicationSemantique2: TextStyle;
   indicationContextuelle: TextStyle;
   equivalentsFrancais: TextStyle;
+  explicationEquiv: TextStyle;
   registreBlocGram: TextStyle;
   domaineBlocGram: TextStyle;
+  blocGramLabel: TextStyle;
   traductionExpressionContainer: ViewStyle;
   traductionExpressionItem: ViewStyle;
   indicationSemExpr: TextStyle;
@@ -328,24 +332,32 @@ export const globalStyles = (isDarkMode: boolean) =>
     sousBlocSemantiqueContainer: {
       marginBottom: 8,
     },
-    sousBlocIndication2: {
-      fontStyle: "italic",
-      marginBottom: 4,
-      fontWeight: "500",
-    },
-    blocContextuelContainer: {
+    ligneEquivalents: {
       marginBottom: 6,
     },
-    indicationContextuelle: {
+    indicationSemantique2: {
       fontStyle: "italic",
-      fontSize: 14,
-      color: COLORS.secondary,
-      marginBottom: 3,
+      fontWeight: "400",
+    },
+    indicationContextuelle: {
+      fontStyle: "normal",
+      fontWeight: "400",
     },
     equivalentsFrancais: {
-      color: COLORS.primary,
-      fontSize: 16,
-      fontWeight: "bold",
+      color: COLORS.francais,
+      fontWeight: "600",
+    },
+    explicationEquiv: {
+      fontStyle: "italic",
+      fontWeight: "normal",
+      color: COLORS.explication,
+      fontSize: 14,
+    },
+    blocGramLabel: {
+      fontSize: 15,
+      fontWeight: "700",
+      color: COLORS.text,
+      marginBottom: 10,
     },
     registreBlocGram: {
       fontSize: 12,

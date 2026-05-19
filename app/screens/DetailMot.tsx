@@ -2,8 +2,15 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+import { LigneEquivalents } from "../_components/LigneEquivalents";
 import { useDictionnaire } from "../contexts/DictionnaireContext";
 import { globalStyles } from "../styles";
+import {
+  formatBlocGramLabel,
+  formatBlocSemantiqueNumero,
+  formatCatGramsDisplay,
+  getBlocsGram,
+} from "../_utils/blocsGram";
 
 function DetailMot() {
   const params = useLocalSearchParams();
@@ -24,6 +31,16 @@ function DetailMot() {
 
     return article;
   }, [articleId, articlesById, articlesByMot]);
+
+  const blocsGram = useMemo(
+    () => (fullArticle ? getBlocsGram(fullArticle) : []),
+    [fullArticle],
+  );
+  const catGramDisplay = useMemo(
+    () => (fullArticle ? formatCatGramsDisplay(fullArticle) : undefined),
+    [fullArticle],
+  );
+  const hasMultipleBlocsGram = blocsGram.length > 1;
 
   if (!fullArticle) {
     return (
@@ -56,11 +73,8 @@ function DetailMot() {
           {fullArticle.vedette.hm && (
             <Text style={style.vedetteCatGram}> {fullArticle.vedette.hm}</Text>
           )}
-          {fullArticle["bloc-gram"]?.["cat-gram"] && (
-            <Text style={style.vedetteCatGram}>
-              {" "}
-              ({fullArticle["bloc-gram"]["cat-gram"]})
-            </Text>
+          {catGramDisplay && (
+            <Text style={style.vedetteCatGram}> ({catGramDisplay})</Text>
           )}
         </Text>
 
@@ -142,29 +156,45 @@ function DetailMot() {
         )}
       </View>
 
-      {/* BLOC GRAMMATICAL ET BLOCS SÉMANTIQUES */}
-      {fullArticle["bloc-gram"] && (
-        <View style={[style.blocGramContainer, { padding: 16 }]}>
-          {/* Informations du bloc grammatical */}
-          {fullArticle["bloc-gram"]["registre-bloc-gram"] && (
-            <Text style={[style.text, style.registreBlocGram]}>
-              Registre: {fullArticle["bloc-gram"]["registre-bloc-gram"]}
-            </Text>
-          )}
-          {fullArticle["bloc-gram"]["domaine-bloc-gram"] && (
-            <Text style={[style.text, style.domaineBlocGram]}>
-              Domaine: {fullArticle["bloc-gram"]["domaine-bloc-gram"]}
+      {/* BLOC(S) GRAMMATICAL(AUX) ET BLOCS SÉMANTIQUES */}
+      {blocsGram.map((blocGram, bgIndex) => (
+        <View
+          key={bgIndex}
+          style={[style.blocGramContainer, { padding: 16 }]}
+        >
+          {hasMultipleBlocsGram && blocGram["cat-gram"] && (
+            <Text style={[style.text, style.blocGramLabel]}>
+              {formatBlocGramLabel(bgIndex, blocGram["cat-gram"])}
             </Text>
           )}
 
-          {/* BLOCS SÉMANTIQUES AVEC SOUS-SENS */}
-          {fullArticle["bloc-gram"]["blocs-semantiques"] &&
-            fullArticle["bloc-gram"]["blocs-semantiques"].map(
-              (bloc: any, index: number) => (
+          {blocGram["registre-bloc-gram"] && (
+            <Text style={[style.text, style.registreBlocGram]}>
+              Registre: {blocGram["registre-bloc-gram"]}
+            </Text>
+          )}
+          {blocGram["domaine-bloc-gram"] && (
+            <Text style={[style.text, style.domaineBlocGram]}>
+              Domaine: {blocGram["domaine-bloc-gram"]}
+            </Text>
+          )}
+
+          {blocGram["blocs-semantiques"] &&
+            (() => {
+              const blocsSem = blocGram["blocs-semantiques"];
+              const hasMultipleBlocsSem = blocsSem.length > 1;
+              return blocsSem.map((bloc: any, index: number) => {
+                const numeroSem = formatBlocSemantiqueNumero(
+                  index,
+                  blocsSem.length,
+                );
+                const hasEnteteSem =
+                  bloc["indication-semantique-1"] ||
+                  bloc["domaine-bloc-semantique"];
+
+                return (
                 <View key={index} style={style.blocSemantiqueContainer}>
-                  {/* Indication sémantique principale */}
-                  {(bloc["indication-semantique-1"] ||
-                    bloc["domaine-bloc-semantique"]) && (
+                  {hasEnteteSem ? (
                     <Text
                       style={[
                         style.text,
@@ -172,8 +202,8 @@ function DetailMot() {
                         { fontWeight: "600", marginBottom: 8 },
                       ]}
                     >
+                      {numeroSem}
                       {bloc["indication-semantique-1"]}
-                      {/* Domaine du bloc sémantique */}
                       {bloc["domaine-bloc-semantique"] && (
                         <Text style={[style.text, style.blocSemDomaine]}>
                           {" "}
@@ -181,6 +211,18 @@ function DetailMot() {
                         </Text>
                       )}
                     </Text>
+                  ) : (
+                    hasMultipleBlocsSem && (
+                      <Text
+                        style={[
+                          style.text,
+                          style.blocSemIndication,
+                          { fontWeight: "600", marginBottom: 8 },
+                        ]}
+                      >
+                        {numeroSem.trim()}
+                      </Text>
+                    )
                   )}
 
                   {/* Registre du sens vedette */}
@@ -200,116 +242,47 @@ function DetailMot() {
                     </Text>
                   )}
 
-                  {/* Sous-blocs sémantiques avec contextes et équivalents */}
+                  {/* Sous-blocs sémantiques : indications et équivalents sur une même ligne */}
                   {bloc["sous-blocs-semantiques"] &&
                     bloc["sous-blocs-semantiques"].map(
-                      (sousBloc: any, sousIndex: number) => (
-                        <View
-                          key={sousIndex}
-                          style={style.sousBlocSemantiqueContainer}
-                        >
-                          {/* Indication sémantique niveau 2 */}
-                          {sousBloc["indication-semantique-2"] && (
-                            <Text
-                              style={[style.text, style.sousBlocIndication2]}
-                            >
-                              {sousBloc["indication-semantique-2"]}
-                            </Text>
-                          )}
+                      (sousBloc: any, sousIndex: number) => {
+                        const blocsContextuels =
+                          sousBloc["blocs-contextuels"] || [];
+                        const indicationSem2 =
+                          sousBloc["indication-semantique-2"];
+                        const sem2LineIndex = indicationSem2
+                          ? blocsContextuels.findIndex(
+                              (ctx: any) =>
+                                (ctx["blocs-equivalents"]?.length ?? 0) > 0,
+                            )
+                          : -1;
 
-                          {/* Blocs contextuels avec indications et équivalents */}
-                          {sousBloc["blocs-contextuels"] &&
-                            sousBloc["blocs-contextuels"].map(
+                        return (
+                          <View
+                            key={sousIndex}
+                            style={style.sousBlocSemantiqueContainer}
+                          >
+                            {blocsContextuels.map(
                               (blocContextuel: any, contextIndex: number) => (
-                                <View
+                                <LigneEquivalents
                                   key={contextIndex}
-                                  style={style.blocContextuelContainer}
-                                >
-                                  {/* Indication contextuelle */}
-                                  {blocContextuel["indication-contextuel"] && (
-                                    <Text
-                                      style={[
-                                        style.text,
-                                        style.indicationContextuelle,
-                                      ]}
-                                    >
-                                      •{" "}
-                                      {blocContextuel["indication-contextuel"]}
-                                    </Text>
-                                  )}
-
-                                  {/* Équivalents français du bloc contextuel */}
-                                  {blocContextuel["blocs-equivalents"] &&
-                                    blocContextuel["blocs-equivalents"].length >
-                                      0 && (
-                                      <Text
-                                        style={[
-                                          style.text,
-                                          style.equivalentsFrancais,
-                                        ]}
-                                      >
-                                        {blocContextuel[
-                                          "blocs-equivalents"
-                                        ].map((equiv: any, idx: number) => (
-                                          <Text key={idx}>
-                                            {idx > 0 && ", "}
-                                            {equiv.avant && `${equiv.avant} `}
-
-                                            {/* Mot français */}
-                                            {equiv["article-francais"]?.vedette
-                                              ?.mot &&
-                                              equiv["article-francais"].vedette
-                                                .mot}
-
-                                            {/* Texte après (ex: "d'années") */}
-                                            {equiv.apres && ` ${equiv.apres}`}
-
-                                            {/* Genre-nbr après le texte complet */}
-                                            {equiv["article-francais"]?.vedette
-                                              ?.grammaire?.["genre-nbr"] && (
-                                              <Text style={style.genreExposant}>
-                                                {" "}
-                                                (
-                                                {
-                                                  equiv["article-francais"]
-                                                    .vedette.grammaire[
-                                                    "genre-nbr"
-                                                  ]
-                                                }
-                                                )
-                                              </Text>
-                                            )}
-
-                                            {/* Afficher les informations de rection si disponibles */}
-                                            {equiv["rection-equiv"] && (
-                                              <>
-                                                {equiv["rection-equiv"][
-                                                  "rection-equiv-est"
-                                                ] &&
-                                                  ` [est: ${equiv["rection-equiv"]["rection-equiv-est"]}]`}
-                                                {equiv["rection-equiv"][
-                                                  "rection-equiv-fra"
-                                                ] &&
-                                                  ` [fra: ${equiv["rection-equiv"]["rection-equiv-fra"]}]`}
-                                              </>
-                                            )}
-
-                                            {/* Afficher l'explication si disponible */}
-                                            {equiv.explication &&
-                                              ` (${equiv.explication})`}
-
-                                            {/* Afficher le registre si disponible */}
-                                            {equiv["registre-equiv"] &&
-                                              ` [${equiv["registre-equiv"]}]`}
-                                          </Text>
-                                        ))}
-                                      </Text>
-                                    )}
-                                </View>
+                                  style={style}
+                                  indicationSemantique2={indicationSem2}
+                                  showIndicationSemantique2={
+                                    contextIndex === sem2LineIndex
+                                  }
+                                  indicationContextuelle={
+                                    blocContextuel["indication-contextuel"]
+                                  }
+                                  blocsEquivalents={
+                                    blocContextuel["blocs-equivalents"] || []
+                                  }
+                                />
                               ),
                             )}
-                        </View>
-                      ),
+                          </View>
+                        );
+                      },
                     )}
 
                   {/* Exemples du bloc */}
@@ -410,10 +383,11 @@ function DetailMot() {
                       </View>
                     ))}
                 </View>
-              ),
-            )}
+                );
+              });
+            })()}
         </View>
-      )}
+      ))}
 
       {/* EXPRESSIONS PHRASÉOLOGIQUES */}
       {(() => {
