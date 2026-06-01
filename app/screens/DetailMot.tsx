@@ -496,26 +496,22 @@ function DetailMot() {
                               )}
 
                               {/* Rection de traduction */}
-                              {trad["rection-trad"] && (
-                                <Text
-                                  style={[
-                                    style.text,
-                                    {
-                                      fontSize: 12,
-                                      color: "#666",
-                                      fontStyle: "italic",
-                                    },
-                                  ]}
-                                >
-                                  Rection:{" "}
-                                  {[
-                                    trad["rection-trad"]["rection-trad-est"] &&
-                                      `est: ${trad["rection-trad"]["rection-trad-est"]}`,
+                              {(trad["rection-trad"]?.["rection-trad-est"] ||
+                                trad["rection-trad"]?.["rection-trad-fra"]) && (
+                                <Text style={style.text}>
+                                  {trad["rection-trad"]["rection-trad-est"] && (
+                                    <Text style={style.exempleEstonien}>
+                                      {trad["rection-trad"]["rection-trad-est"]}
+                                    </Text>
+                                  )}
+                                  {trad["rection-trad"]["rection-trad-est"] &&
                                     trad["rection-trad"]["rection-trad-fra"] &&
-                                      `fra: ${trad["rection-trad"]["rection-trad-fra"]}`,
-                                  ]
-                                    .filter(Boolean)
-                                    .join(", ")}
+                                    ", "}
+                                  {trad["rection-trad"]["rection-trad-fra"] && (
+                                    <Text style={style.exempleFrancais}>
+                                      {trad["rection-trad"]["rection-trad-fra"]}
+                                    </Text>
+                                  )}
                                 </Text>
                               )}
                             </View>

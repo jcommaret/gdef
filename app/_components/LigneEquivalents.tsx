@@ -57,10 +57,16 @@ export function LigneEquivalents({
                     {" "}({grammaire["genre-nbr"]})
                   </Text>
                 )}
-                {equiv["rection-equiv"]?.["rection-equiv-est"] &&
-                  ` [est: ${equiv["rection-equiv"]["rection-equiv-est"]}]`}
-                {equiv["rection-equiv"]?.["rection-equiv-fra"] &&
-                  ` [fra: ${equiv["rection-equiv"]["rection-equiv-fra"]}]`}
+              </Text>
+            )}
+            {equiv["rection-equiv"]?.["rection-equiv-est"] && (
+              <Text style={style.exempleEstonien}>
+                {" "}{equiv["rection-equiv"]["rection-equiv-est"]}
+              </Text>
+            )}
+            {equiv["rection-equiv"]?.["rection-equiv-fra"] && (
+              <Text style={style.exempleFrancais}>
+                {" "}{equiv["rection-equiv"]["rection-equiv-fra"]}
               </Text>
             )}
             {plurielIrr && (
