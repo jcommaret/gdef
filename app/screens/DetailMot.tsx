@@ -65,7 +65,7 @@ function DetailMot() {
       <View style={style.vedetteContainer}>
         <Text>
           {fullArticle.vedette.particule && (
-            <Text style={style.vedetteParticule}>
+            <Text style={style.itemMotText}>
               {fullArticle.vedette.particule}{" "}
             </Text>
           )}
@@ -89,7 +89,8 @@ function DetailMot() {
         {/* Type */}
         {fullArticle.vedette.type &&
           fullArticle.vedette.type !== "lsnonflechi" &&
-          fullArticle.vedette.type !== "lcompose" && (
+          fullArticle.vedette.type !== "lcompose" &&
+          fullArticle.vedette.type !== "vap" && (
             <Text style={[style.text, style.vedetteType]}>
               Type: {fullArticle.vedette.type}
             </Text>
