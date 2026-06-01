@@ -4,10 +4,13 @@ Application mobile et web du **GDEF** (_Grand dictionnaire estonien-français_),
 
 ## Fonctionnalités
 
-- **Liste alphabétique** des vedettes estoniennes avec aperçu des équivalents français
-- **Recherche** par mot estonien
+- **Liste alphabétique** des vedettes estoniennes avec aperçu des équivalents français (incluant les formes irrégulières)
+- **Numéros d'homonymes** affichés dans la liste et dans le détail
+- **Recherche** trilingue :
+  - par mot estonien (correspondance partielle, insensible aux accents : `oigus` → `õigus`)
+  - par équivalent français (`beau` → `ilus`, `kaunis`…)
 - **Fiche article détaillée** : vedette, morphologie, blocs grammaticaux, sens, contextes, exemples bilingues, expressions phraséologiques
-- **Résolution des renvois** vers les articles français référencés dans les équivalents
+- **Formatage typographique** des balises `[sup]` et `[i]` dans les textes
 - Disponible sur **iOS**, **Android** et **web**
 
 ## Prérequis
@@ -28,15 +31,15 @@ npm install
 
 ### Données du dictionnaire
 
-L’application charge `app/data/dictionnaire.json` (~28 Mo). Ce fichier est produit à partir des sources XML du GDEF :
+L'application charge `app/data/dictionnaire.json` (~30 Mo). Ce fichier est produit à partir des sources XML du GDEF :
 
 | Fichier                            | Rôle                                       |
 | ---------------------------------- | ------------------------------------------ |
 | `app/data/GDEF_psv-2023-03-30.xml` | Articles estoniens (PSV)                   |
 | `app/data/GDEF_fra-2023-11-08.xml` | Articles français (résolution des renvois) |
-| `app/data/dictionnaire.json`       | Base JSON utilisée par l’app               |
+| `app/data/dictionnaire.json`       | Base JSON utilisée par l'app               |
 
-Si `dictionnaire.json` est absent, générez-le :
+Si `dictionnaire.json` est absent ou doit être régénéré :
 
 ```bash
 python3 app/data/generation_dictionnaire.py
@@ -55,9 +58,9 @@ Puis, dans le terminal Expo :
 | Touche | Action                     |
 | ------ | -------------------------- |
 | `i`    | Ouvrir le simulateur iOS   |
-| `a`    | Ouvrir l’émulateur Android |
+| `a`    | Ouvrir l'émulateur Android |
 | `w`    | Ouvrir la version web      |
-| `r`    | Recharger l’application    |
+| `r`    | Recharger l'application    |
 
 Autres scripts :
 
@@ -72,7 +75,7 @@ Vous pouvez aussi scanner le QR code avec **Expo Go** sur un téléphone.
 
 ### Simulateur iOS
 
-Si Expo tente d’ouvrir un simulateur supprimé ou obsolète, listez les appareils disponibles puis ciblez-en un explicitement :
+Si Expo tente d'ouvrir un simulateur supprimé ou obsolète :
 
 ```bash
 xcrun simctl list devices available
@@ -86,52 +89,96 @@ En cas de cache simulateur invalide : `rm -rf ~/.expo` puis relancez.
 ```
 GDEF/
 ├── app/
-│   ├── index.tsx                 # Écran d’accueil (liste)
-│   ├── _layout.tsx               # Navigation (Expo Router)
+│   ├── index.tsx                      # Écran d'accueil (liste)
+│   ├── _layout.tsx                    # Navigation (Expo Router)
 │   ├── screens/
-│   │   ├── index.tsx             # Liste et recherche
-│   │   └── DetailMot.tsx         # Fiche article
-│   ├── _components/              # Composants (hors routes Expo Router)
-│   │   └── LigneEquivalents.tsx
-│   ├── _types/                   # Types TypeScript
-│   ├── _utils/                   # Utilitaires (numérotation, blocs grammaticaux)
-│   ├── contexts/                 # Contexte React (chargement du dictionnaire)
-│   ├── styles/                   # Styles partagés
-│   └── data/                     # JSON, XML, script Python, schémas
-├── assets/                       # Icônes, splash screens
-├── app.json                      # Configuration Expo
+│   │   ├── index.tsx                  # Liste alphabétique et recherche
+│   │   └── DetailMot.tsx              # Fiche article (orchestration)
+│   ├── _components/
+│   │   ├── BlocSemantique.tsx         # Rendu d'un bloc sémantique
+│   │   ├── ExpressionsPhraseo.tsx     # Rendu des expressions phraséologiques
+│   │   ├── FormattedText.tsx          # Texte avec balises [sup] / [i]
+│   │   └── LigneEquivalents.tsx       # Ligne d'équivalents (flex-row)
+│   ├── _types/
+│   │   └── dictionary.ts             # Interfaces TypeScript
+│   ├── _utils/
+│   │   └── blocsGram.ts              # Fonctions utilitaires (blocs, équivalents…)
+│   ├── contexts/
+│   │   └── DictionnaireContext.tsx   # Chargement et index du dictionnaire
+│   ├── styles/
+│   │   └── index.ts                  # Styles partagés (globalStyles, Styles)
+│   └── data/
+│       ├── dictionnaire.json         # Base JSON (~30 Mo)
+│       ├── GDEF_psv-2023-03-30.xml   # Source estonienne
+│       ├── GDEF_fra-2023-11-08.xml   # Source française
+│       ├── generation_dictionnaire.py
+│       ├── schema_article_complet.json
+│       └── README_structure.md
+├── assets/
+├── app.json
 └── package.json
 ```
 
-Les dossiers préfixés par `_` sous `app/` (`_components`, `_types`, `_utils`) ne sont **pas** des routes Expo Router : ils évitent les avertissements du type _« missing default export »_.
+> Les dossiers préfixés `_` sous `app/` ne sont **pas** des routes Expo Router.
+> Chaque fichier dispose d'un `export default` pour satisfaire le vérificateur de routes d'Expo.
 
 ## Modèle de données (aperçu)
 
-Chaque **article** estonien contient notamment :
+Chaque **article** estonien contient :
 
-- **vedette** : mot, particule, homonymie (`hm`), morphologie, registre…
+- **vedette** : `mot`, `particule`, `hm` (homonymie), `bloc-morph`, registre/domaine
 - **bloc-gram** ou **blocs-gram** : catégorie grammaticale et blocs sémantiques
-- **blocs-semantiques** : sens principaux, sous-sens, contextes, équivalents français
-- **blocs-phraseologiques** : expressions et traductions
+  - **blocs-semantiques** : sens principal, sous-sens, contextes, équivalents français
+  - **exemples** : exemples bilingues avec `blocs-traduction-exe` (liste, plusieurs traductions possibles)
+- **blocs-phraseologiques** : expressions estoniennes et leurs traductions françaises
 
-Voir `app/data/README_structure.md` pour la hiérarchie complète.
+Les **équivalents français** embarquent l'article français résolu (`article-francais`), incluant le genre, les formes irrégulières de pluriel et de féminin.
 
-## Conventions d’affichage
+Voir `app/data/schema_article_complet.json` pour la hiérarchie complète avec cardinalités.
 
-L’interface reprend les conventions de la version en ligne :
+### Points particuliers du format JSON
 
-| Élément                      | Présentation                                                       |
-| ---------------------------- | ------------------------------------------------------------------ |
-| Plusieurs blocs grammaticaux | Chiffres romains + catégorie : **I konj.**, **II adv.**            |
-| Plusieurs blocs sémantiques  | Numérotation arabe : **1.**, **2.** (un seul bloc : pas de numéro) |
-| Indication sémantique 2      | Entre parenthèses, _italique_ : `(täielikult)`                     |
-| Indication contextuelle      | Entre crochets, romain : `[selga, jalga]`                          |
-| Équivalent français          | Bleu, gras                                                         |
-| Explication (`explication`)  | _Italique_, noir                                                   |
-| Texte estonien (exemples)    | Rouge                                                              |
-| Genre après équivalent       | Gris, petit : `(m)`, `(f)`                                         |
+| Situation | Traitement |
+|---|---|
+| Un exemple avec plusieurs traductions | `blocs-traduction-exe` est une **liste** |
+| Mots composés (`type: lcompose`) | Formes morphologiques abrégées avec `+` (affichées telles quelles) |
+| Plusieurs domaines sur un bloc sémantique | Joints par `, ` dans `domaine-bloc-semantique` |
+| Balises `[sup]...[/sup]` et `[i]...[/i]` | Interprétées à l'affichage par `FormattedText` |
+| Balises annotation `[premier]`, `[deux]`… | Silencieusement supprimées à l'affichage |
 
-Indications et équivalents sont sur **la même ligne**, sans saut de ligne entre eux.
+## Conventions d'affichage
+
+L'interface suit les conventions de la version en ligne du GDEF :
+
+| Élément | Présentation |
+|---|---|
+| Plusieurs blocs grammaticaux | Chiffres romains : **I konj.**, **II adv.** |
+| Plusieurs blocs sémantiques | Numérotation arabe : **1.**, **2.** |
+| Numéro d'homonyme (`hm`) | Gras, collé à la vedette : `aas **2**` |
+| Indication sémantique 2 | Entre parenthèses, _italique_ |
+| Indication contextuelle | Entre crochets, romain |
+| Équivalent français | Bleu, gras |
+| Genre grammatical (`genre-nbr`) | Gris, petit, exposant, collé au mot : `équipe`*f* |
+| Formes irrégulières | Après chaque forme : `beau, beaux (pl.), belle (f.)` |
+| Rection estonienne | Rouge (même couleur que les exemples) |
+| Rection française | Bleu, non gras |
+| Domaine / registre | Petites capitales grises (style `domainRegistre`) |
+| Indicateur de locution (`◦`) | Devant les traductions phraséologiques françaises |
+| Indicateur de proverbe (`◊`) | Devant les exemples ou traductions proverbiaux |
+| Exemples estoniens | Rouge |
+| Traductions françaises | Bleu |
+| Domaine d'un exemple | Entre parenthèses sur la même ligne : `sideeriline aasta (astr.)` |
+| `[sup]e[/sup]` | Exposant : XIXᵉ siècle, 200 m² |
+| `[i]titre[/i]` | Italique : *Kalevipoeg*, *Le Seigneur des anneaux* |
+
+## Recherche
+
+La recherche opère sur un index pré-calculé au chargement :
+
+- **Mot estonien** : correspondance par inclusion (`includes`), insensible aux accents (`õ→o`, `ä→a`, `ö→o`, `ü→u`, `š→s`, `ž→z`)
+- **Équivalents français** : correspondance par début de mot (`startsWith`) sur tous les équivalents français de l'article
+
+L'index est calculé une fois dans un `useMemo` sur `sortedArticles`. La logique d'extraction des équivalents est centralisée dans `getEquivalentsWithContext()` (`_utils/blocsGram.ts`).
 
 ## Stack technique
 
@@ -143,10 +190,9 @@ Indications et équivalents sont sur **la même ligne**, sans saut de ligne entr
 ## Documentation complémentaire
 
 - `app/data/README_structure.md` — structure JSON des articles
-- `app/data/README_DetailMot_v2.md` — historique des champs affichés dans la fiche article
 - `app/data/schema_article_complet.json` — schéma avec cardinalités
 
 ## Crédits et licence des données
 
 Dictionnaire **GDEF** — _Grand dictionnaire estonien-français_.  
-Données : © Association franco-estonienne de lexicographie et Institut de la langue estonienne. [estfra.ee/gdef](https://www.estfra.ee/gdef/)).
+Données : © Association franco-estonienne de lexicographie et Institut de la langue estonienne. [estfra.ee/gdef](https://www.estfra.ee/gdef/).

@@ -33,7 +33,10 @@ export interface Styles {
   blocGramContainer: ViewStyle;
   blocSemantiqueContainer: ViewStyle;
   blocSemIndication: TextStyle;
+  blocSemIndicationHeader: TextStyle;
   blocSemDomaine: TextStyle;
+  indicSemExemple: TextStyle;
+  flexRowWrap: ViewStyle;
   itemText: TextStyle;
   searchContainer: ViewStyle;
   searchBar: ViewStyle;
@@ -219,6 +222,20 @@ export const globalStyles = (isDarkMode: boolean) =>
     blocSemIndication: {
       color: COLORS.text,
       fontWeight: "500",
+    },
+    blocSemIndicationHeader: {
+      fontWeight: "600",
+      marginBottom: 8,
+    },
+    indicSemExemple: {
+      fontSize: 12,
+      color: COLORS.secondary,
+      fontStyle: "italic",
+    },
+    flexRowWrap: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignItems: "flex-end",
     },
     blocSemDomaine: {
       fontSize: 11,

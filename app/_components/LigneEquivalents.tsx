@@ -110,3 +110,4 @@ export function LigneEquivalents({
     </View>
   );
 }
+export default LigneEquivalents;

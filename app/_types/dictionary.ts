@@ -73,3 +73,5 @@ export interface Article {
   "blocs-gram"?: BlocGram[];
   [key: string]: any;
 }
+
+export default {};

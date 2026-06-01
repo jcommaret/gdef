@@ -2,15 +2,15 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-import { FormattedText } from "../_components/FormattedText";
-import { LigneEquivalents } from "../_components/LigneEquivalents";
+import { BlocSemantique } from "../_components/BlocSemantique";
+import { ExpressionsPhraseo } from "../_components/ExpressionsPhraseo";
 import { useDictionnaire } from "../contexts/DictionnaireContext";
 import { globalStyles } from "../styles";
 import {
   formatBlocGramLabel,
-  formatBlocSemantiqueNumero,
   formatCatGramsDisplay,
   getBlocsGram,
+  shouldShowVedetteType,
 } from "../_utils/blocsGram";
 
 function DetailMot() {
@@ -20,27 +20,18 @@ function DetailMot() {
   const router = useRouter();
   const { articlesById, articlesByMot } = useDictionnaire();
 
-  // Recherche O(1) au lieu de O(n) avec les index Map
   const fullArticle = useMemo(() => {
-    // D'abord essayer de trouver par ID exact (plus précis)
-    let article = articlesById.get(articleId);
-
-    // Si pas trouvé par ID, essayer par mot (pour compatibilité)
-    if (!article) {
-      article = articlesByMot.get(articleId);
-    }
-
-    return article;
+    return articlesById.get(articleId) ?? articlesByMot.get(articleId);
   }, [articleId, articlesById, articlesByMot]);
 
   const blocsGram = useMemo(
     () => (fullArticle ? getBlocsGram(fullArticle) : []),
     [fullArticle],
   );
-  const catGramDisplay = useMemo(
-    () => (fullArticle ? formatCatGramsDisplay(fullArticle) : undefined),
-    [fullArticle],
-  );
+
+  const catGramDisplay = fullArticle
+    ? formatCatGramsDisplay(fullArticle)
+    : undefined;
   const hasMultipleBlocsGram = blocsGram.length > 1;
 
   if (!fullArticle) {
@@ -79,36 +70,26 @@ function DetailMot() {
           )}
         </Text>
 
-        {/* Variante */}
-        {fullArticle.vedette.variante &&
-          fullArticle.vedette.variante !== "" && (
-            <Text style={[style.text, { fontStyle: "italic" }]}>
-              Variante: {fullArticle.vedette.variante}
-            </Text>
-          )}
+        {fullArticle.vedette.variante && fullArticle.vedette.variante !== "" && (
+          <Text style={[style.text, { fontStyle: "italic" }]}>
+            Variante: {fullArticle.vedette.variante}
+          </Text>
+        )}
 
-        {/* Type */}
-        {fullArticle.vedette.type &&
-          fullArticle.vedette.type !== "lsnonflechi" &&
-          fullArticle.vedette.type !== "lcompose" &&
-          fullArticle.vedette.type !== "vap" && (
-            <Text style={[style.text, style.vedetteType]}>
-              Type: {fullArticle.vedette.type}
-            </Text>
-          )}
+        {shouldShowVedetteType(fullArticle.vedette.type) && (
+          <Text style={[style.text, style.vedetteType]}>
+            Type: {fullArticle.vedette.type}
+          </Text>
+        )}
 
-        {/* Morphologie - bloc-morph */}
-        {fullArticle.vedette["bloc-morph"] && (
+        {fullArticle.vedette["bloc-morph"]?.formes && (
           <View style={style.blocMorphContainer}>
-            {fullArticle.vedette["bloc-morph"].formes && (
-              <Text style={style.text}>
-                {fullArticle.vedette["bloc-morph"].formes}
-              </Text>
-            )}
+            <Text style={style.text}>
+              {fullArticle.vedette["bloc-morph"].formes}
+            </Text>
           </View>
         )}
 
-        {/* Registre et domaine vedette */}
         {fullArticle.vedette["registre-vedette"] && (
           <Text style={[style.text, style.domainRegistre]}>
             {fullArticle.vedette["registre-vedette"]}
@@ -123,10 +104,7 @@ function DetailMot() {
 
       {/* BLOC(S) GRAMMATICAL(AUX) ET BLOCS SÉMANTIQUES */}
       {blocsGram.map((blocGram, bgIndex) => (
-        <View
-          key={bgIndex}
-          style={[style.blocGramContainer, { padding: 16 }]}
-        >
+        <View key={bgIndex} style={[style.blocGramContainer, { padding: 16 }]}>
           {hasMultipleBlocsGram && blocGram["cat-gram"] && (
             <Text style={[style.text, style.blocGramLabel]}>
               {formatBlocGramLabel(bgIndex, blocGram["cat-gram"])}
@@ -144,300 +122,29 @@ function DetailMot() {
             </Text>
           )}
 
-          {blocGram["blocs-semantiques"] &&
-            (() => {
-              const blocsSem = blocGram["blocs-semantiques"];
-              const hasMultipleBlocsSem = blocsSem.length > 1;
-              return blocsSem.map((bloc: any, index: number) => {
-                const numeroSem = formatBlocSemantiqueNumero(
-                  index,
-                  blocsSem.length,
-                );
-                const hasEnteteSem =
-                  bloc["indication-semantique-1"] ||
-                  bloc["domaine-bloc-semantique"];
-
-                return (
-                <View key={index} style={style.blocSemantiqueContainer}>
-                  {hasEnteteSem ? (
-                    <Text
-                      style={[
-                        style.text,
-                        style.blocSemIndication,
-                        { fontWeight: "600", marginBottom: 8 },
-                      ]}
-                    >
-                      {numeroSem}
-                      {bloc["indication-semantique-1"]}
-                      {bloc["domaine-bloc-semantique"] && (
-                        <Text style={[style.text, style.blocSemDomaine]}>
-                          {" "}
-                          ({bloc["domaine-bloc-semantique"]})
-                        </Text>
-                      )}
-                    </Text>
-                  ) : (
-                    hasMultipleBlocsSem && (
-                      <Text
-                        style={[
-                          style.text,
-                          style.blocSemIndication,
-                          { fontWeight: "600", marginBottom: 8 },
-                        ]}
-                      >
-                        {numeroSem.trim()}
-                      </Text>
-                    )
-                  )}
-
-                  {/* Registre du sens vedette */}
-                  {bloc["registre-sens-ved"] && (
-                    <Text style={[style.text, style.domainRegistre, { marginBottom: 4 }]}>
-                      {bloc["registre-sens-ved"]}
-                    </Text>
-                  )}
-
-                  {/* Sous-blocs sémantiques : indications et équivalents sur une même ligne */}
-                  {bloc["sous-blocs-semantiques"] &&
-                    bloc["sous-blocs-semantiques"].map(
-                      (sousBloc: any, sousIndex: number) => {
-                        const blocsContextuels =
-                          sousBloc["blocs-contextuels"] || [];
-                        const indicationSem2 =
-                          sousBloc["indication-semantique-2"];
-                        const sem2LineIndex = indicationSem2
-                          ? blocsContextuels.findIndex(
-                              (ctx: any) =>
-                                (ctx["blocs-equivalents"]?.length ?? 0) > 0,
-                            )
-                          : -1;
-
-                        return (
-                          <View
-                            key={sousIndex}
-                            style={style.sousBlocSemantiqueContainer}
-                          >
-                            {blocsContextuels.map(
-                              (blocContextuel: any, contextIndex: number) => (
-                                <LigneEquivalents
-                                  key={contextIndex}
-                                  style={style}
-                                  indicationSemantique2={indicationSem2}
-                                  showIndicationSemantique2={
-                                    contextIndex === sem2LineIndex
-                                  }
-                                  indicationContextuelle={
-                                    blocContextuel["indication-contextuel"]
-                                  }
-                                  blocsEquivalents={
-                                    blocContextuel["blocs-equivalents"] || []
-                                  }
-                                />
-                              ),
-                            )}
-                          </View>
-                        );
-                      },
-                    )}
-
-                  {/* Exemples du bloc */}
-                  {bloc.exemples &&
-                    bloc.exemples.length > 0 &&
-                    bloc.exemples.map((exemple: any, exempleIndex: number) => (
-                      <View key={exempleIndex} style={style.exempleItem}>
-                        {/* Exemple estonien + domaine/registre sur la même ligne */}
-                        {exemple["exemple-est"] && (
-                          <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "flex-end" }}>
-                            <FormattedText
-                              text={
-                                (exemple["proverbe-exemple-est"] === "true" ? "◊ " : "") +
-                                exemple["exemple-est"]
-                              }
-                              style={[style.text, style.exempleEstonien]}
-                            />
-                            {(exemple["registre-exe-est"] ||
-                              exemple["domaine-exe-est"]) && (
-                              <Text style={[style.text, style.domainRegistre]}>
-                                {" ("}
-                                {[
-                                  exemple["registre-exe-est"],
-                                  exemple["domaine-exe-est"],
-                                ]
-                                  .filter(Boolean)
-                                  .join(", ")}
-                                {")"}
-                              </Text>
-                            )}
-                          </View>
-                        )}
-
-                        {/* Traductions françaises */}
-                        {exemple["blocs-traduction-exe"]?.map(
-                          (trad: any, tradIndex: number) => (
-                            <View key={tradIndex}>
-                              {trad["indic-sem-exe"] && (
-                                <Text
-                                  style={[
-                                    style.text,
-                                    {
-                                      fontSize: 12,
-                                      color: "#666",
-                                      fontStyle: "italic",
-                                    },
-                                  ]}
-                                >
-                                  {trad["indic-sem-exe"]}
-                                </Text>
-                              )}
-                              {trad["traduction-exe"] && (
-                                <FormattedText
-                                  text={
-                                    (trad["proverbe-traduction-exe"] === "true" ? "◊ " : "") +
-                                    trad["traduction-exe"]
-                                  }
-                                  style={[style.text, style.exempleFrancais]}
-                                />
-                              )}
-                              {trad["registre-trad-exe"] && (
-                                <Text style={[style.text, style.domainRegistre]}>
-                                  {trad["registre-trad-exe"]}
-                                </Text>
-                              )}
-                            </View>
-                          ),
-                        )}
-                      </View>
-                    ))}
-                </View>
-                );
-              });
-            })()}
+          {(blocGram["blocs-semantiques"] as any[] | undefined)?.map(
+            (bloc: any, index: number, arr: any[]) => (
+              <BlocSemantique
+                key={index}
+                bloc={bloc}
+                index={index}
+                total={arr.length}
+                style={style}
+              />
+            ),
+          )}
         </View>
       ))}
 
       {/* EXPRESSIONS PHRASÉOLOGIQUES */}
-      {(() => {
-        // Vérifier s'il y a des expressions avec du contenu réel
-        const expressionsValides =
-          fullArticle["blocs-phraseologiques"]?.filter(
-            (expr: any) =>
-              expr["expression-est"] ||
-              (expr["blocs-traduction-expr"] &&
-                expr["blocs-traduction-expr"].length > 0 &&
-                expr["blocs-traduction-expr"].some(
-                  (trad: any) => trad["traduction-expr"],
-                )),
-          ) || [];
-
-        return (
-          expressionsValides.length > 0 && (
-            <View style={style.expressionsContainer}>
-              <Text style={[style.text, style.blocSemIndication]}>
-                Expressions phraséologiques
-              </Text>
-              {expressionsValides.map((expr: any, index: number) => (
-                <View key={index} style={style.expressionItem}>
-                  {/* Expression estonienne */}
-                  {expr["expression-est"] && (
-                    <FormattedText
-                      text={expr["expression-est"]}
-                      style={[style.text, style.expressionEstonienne]}
-                    />
-                  )}
-
-                  {/* Registre de l'expression */}
-                  {expr["registre-expression-est"] && (
-                    <Text style={[style.text, style.domainRegistre]}>
-                      {expr["registre-expression-est"]}
-                    </Text>
-                  )}
-
-                  {/* Traductions */}
-                  {expr["blocs-traduction-expr"] &&
-                    expr["blocs-traduction-expr"].length > 0 && (
-                      <View style={style.traductionExpressionContainer}>
-                        {expr["blocs-traduction-expr"].map(
-                          (trad: any, tradIndex: number) => (
-                            <View
-                              key={tradIndex}
-                              style={style.traductionExpressionItem}
-                            >
-                              {/* Indication sémantique de l'expression */}
-                              {trad["indic-sem-expr"] && (
-                                <Text
-                                  style={[style.text, style.indicationSemExpr]}
-                                >
-                                  {trad["indic-sem-expr"]}
-                                </Text>
-                              )}
-
-                              {/* Traduction française */}
-                              {trad["traduction-expr"] && (
-                                <Text
-                                  style={[
-                                    style.text,
-                                    style.expressionFrancaise,
-                                  ]}
-                                >
-                                  {trad["locution-traduction-expr"] === "true" && "◦ "}
-                                  {trad["traduction-expr"]}
-                                </Text>
-                              )}
-
-                              {/* Registre de la traduction */}
-                              {trad["registre-trad-expr"] && (
-                                <Text style={[style.text, style.domainRegistre]}>
-                                  {trad["registre-trad-expr"]}
-                                </Text>
-                              )}
-
-                              {/* Rection de traduction */}
-                              {(trad["rection-trad"]?.["rection-trad-est"] ||
-                                trad["rection-trad"]?.["rection-trad-fra"]) && (
-                                <Text style={style.text}>
-                                  {trad["rection-trad"]["rection-trad-est"] && (
-                                    <Text style={style.exempleEstonien}>
-                                      {trad["rection-trad"]["rection-trad-est"]}
-                                    </Text>
-                                  )}
-                                  {trad["rection-trad"]["rection-trad-est"] &&
-                                    trad["rection-trad"]["rection-trad-fra"] &&
-                                    ", "}
-                                  {trad["rection-trad"]["rection-trad-fra"] && (
-                                    <Text style={style.exempleFrancais}>
-                                      {trad["rection-trad"]["rection-trad-fra"]}
-                                    </Text>
-                                  )}
-                                </Text>
-                              )}
-                            </View>
-                          ),
-                        )}
-                      </View>
-                    )}
-
-                  {/* Renvois phraséologiques */}
-                  {expr["blocs-renvois"] &&
-                    expr["blocs-renvois"].length > 0 && (
-                      <View style={style.renvoiContainer}>
-                        <Text style={[style.text, style.renvoiText]}>
-                          Renvois:{" "}
-                          {expr["blocs-renvois"]
-                            .map((renvoi: any) => renvoi["renvoi-phraseol"])
-                            .filter(Boolean)
-                            .join(", ")}
-                        </Text>
-                      </View>
-                    )}
-                </View>
-              ))}
-            </View>
-          )
-        );
-      })()}
+      {fullArticle["blocs-phraseologiques"]?.length > 0 && (
+        <ExpressionsPhraseo
+          blocs={fullArticle["blocs-phraseologiques"]}
+          style={style}
+        />
+      )}
     </ScrollView>
   );
 }
 
-// Mémoïser le composant pour éviter les re-rendus inutiles
 export default React.memo(DetailMot);

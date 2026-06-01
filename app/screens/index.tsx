@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDictionnaire } from "../contexts/DictionnaireContext";
 import { globalStyles } from "../styles";
 import { Article } from "../_types/dictionary";
-import { formatCatGramsDisplay, getBlocsGram } from "../_utils/blocsGram";
+import { formatCatGramsDisplay, getBlocsGram, getEquivalentsWithContext } from "../_utils/blocsGram";
 
 const ITEMS_PER_LOAD = 100;
 
@@ -140,51 +140,6 @@ function ListeMots() {
       setCurrentIndex(ITEMS_PER_LOAD);
     }
   }, [sortedArticles]);
-
-  // Fonction pour récupérer les équivalents par contexte (hors composant pour optimisation)
-  const getEquivalentsWithContext = (
-    article: Article,
-  ): { indication: string; equivalents: string[] }[] => {
-    const contexts: { indication: string; equivalents: string[] }[] = [];
-    getBlocsGram(article).forEach((blocGram) => {
-      const blocs = blocGram["blocs-semantiques"] || [];
-      blocs.forEach((bloc: any) => {
-        bloc["sous-blocs-semantiques"]?.forEach((sb: any) => {
-          sb["blocs-contextuels"]?.forEach((ctx: any) => {
-            const indication = ctx["indication-contextuel"] || "";
-            const contexteEquivalents: string[] = [];
-
-            ctx["blocs-equivalents"]?.forEach((eq: any) => {
-              const motFr = eq["article-francais"]?.vedette?.mot;
-              const grammaire = eq["article-francais"]?.vedette?.grammaire;
-
-              if (motFr) {
-                const equivalent =
-                  (eq.avant ? `${eq.avant} ` : "") +
-                  motFr +
-                  (eq.apres ? ` ${eq.apres}` : "");
-                contexteEquivalents.push(equivalent);
-                if (grammaire?.["pluriel-irr"])
-                  contexteEquivalents.push(`${grammaire["pluriel-irr"]} (pl.)`);
-                if (grammaire?.["feminin-irr"])
-                  contexteEquivalents.push(`${grammaire["feminin-irr"]} (f.)`);
-              } else if (eq.avant || eq.apres) {
-                const equivalent =
-                  (eq.avant || "") + (eq.apres ? ` ${eq.apres}` : "");
-                if (equivalent) contexteEquivalents.push(equivalent);
-              }
-            });
-
-            if (contexteEquivalents.length > 0) {
-              contexts.push({ indication, equivalents: contexteEquivalents });
-            }
-          });
-        });
-      });
-    });
-
-    return contexts;
-  };
 
   // Composant mémoïsé pour les items de la liste
   const ListeItem = React.memo(

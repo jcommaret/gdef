@@ -54,6 +54,51 @@ export function formatBlocSemantiqueNumero(
   return total > 1 ? `${index + 1}. ` : "";
 }
 
+/** Vrai si le type de vedette mérite d'être affiché. */
+export function shouldShowVedetteType(type?: string): boolean {
+  return Boolean(
+    type && !["lsnonflechi", "lcompose", "vap"].includes(type),
+  );
+}
+
+/** Équivalents français d'un article regroupés par contexte, pour la liste. */
+export function getEquivalentsWithContext(
+  article: Article,
+): { indication: string; equivalents: string[] }[] {
+  const contexts: { indication: string; equivalents: string[] }[] = [];
+  getBlocsGram(article).forEach((blocGram) => {
+    const blocs: any[] = (blocGram as any)["blocs-semantiques"] || [];
+    blocs.forEach((bloc) => {
+      bloc["sous-blocs-semantiques"]?.forEach((sb: any) => {
+        sb["blocs-contextuels"]?.forEach((ctx: any) => {
+          const indication: string = ctx["indication-contextuel"] || "";
+          const equivs: string[] = [];
+          ctx["blocs-equivalents"]?.forEach((eq: any) => {
+            const motFr = eq["article-francais"]?.vedette?.mot;
+            const grammaire = eq["article-francais"]?.vedette?.grammaire;
+            if (motFr) {
+              equivs.push(
+                (eq.avant ? `${eq.avant} ` : "") +
+                  motFr +
+                  (eq.apres ? ` ${eq.apres}` : ""),
+              );
+              if (grammaire?.["pluriel-irr"])
+                equivs.push(`${grammaire["pluriel-irr"]} (pl.)`);
+              if (grammaire?.["feminin-irr"])
+                equivs.push(`${grammaire["feminin-irr"]} (f.)`);
+            } else if (eq.avant || eq.apres) {
+              const s = (eq.avant || "") + (eq.apres ? ` ${eq.apres}` : "");
+              if (s) equivs.push(s);
+            }
+          });
+          if (equivs.length > 0) contexts.push({ indication, equivalents: equivs });
+        });
+      });
+    });
+  });
+  return contexts;
+}
+
 /** Libellé des catégories grammaticales pour la vedette ou la liste. */
 export function formatCatGramsDisplay(article: Article): string | undefined {
   const blocs = getBlocsGram(article);

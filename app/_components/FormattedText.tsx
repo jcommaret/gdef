@@ -102,3 +102,4 @@ export function FormattedText({ text, style }: FormattedTextProps) {
     </View>
   );
 }
+export default FormattedText;
