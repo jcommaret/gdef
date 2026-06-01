@@ -211,6 +211,7 @@ export const globalStyles = (isDarkMode: boolean) =>
     },
     genreExposant: {
       fontSize: 10,
+      fontStyle: "italic",
       color: COLORS.secondary,
       alignSelf: "flex-start",
     },

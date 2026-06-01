@@ -62,7 +62,7 @@ export function LigneEquivalents({
             )}
             {grammaire?.["genre-nbr"] && (
               <Text style={style.genreExposant}>
-                ({grammaire["genre-nbr"]})
+                {grammaire["genre-nbr"]}
               </Text>
             )}
             {equiv.apres && (
