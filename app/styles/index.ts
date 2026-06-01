@@ -70,6 +70,7 @@ export interface Styles {
   traductionExpressionItem: ViewStyle;
   indicationSemExpr: TextStyle;
   formeIrreguliere: TextStyle;
+  domainRegistre: TextStyle;
   renvoiContainer: ViewStyle;
   renvoiText: TextStyle;
   exempleItem: ViewStyle;
@@ -221,8 +222,9 @@ export const globalStyles = (isDarkMode: boolean) =>
       fontWeight: "500",
     },
     blocSemDomaine: {
-      fontSize: 12,
+      fontSize: 11,
       color: COLORS.secondary,
+      fontVariant: ["small-caps"],
     },
     exempleItem: {
       paddingVertical: 8,
@@ -366,16 +368,21 @@ export const globalStyles = (isDarkMode: boolean) =>
       color: COLORS.text,
       marginBottom: 10,
     },
-    registreBlocGram: {
-      fontSize: 12,
+    domainRegistre: {
+      fontSize: 11,
       color: COLORS.secondary,
-      fontStyle: "italic",
+      fontVariant: ["small-caps"],
+    },
+    registreBlocGram: {
+      fontSize: 11,
+      color: COLORS.secondary,
+      fontVariant: ["small-caps"],
       marginBottom: 4,
     },
     domaineBlocGram: {
-      fontSize: 12,
+      fontSize: 11,
       color: COLORS.secondary,
-      fontStyle: "italic",
+      fontVariant: ["small-caps"],
       marginBottom: 8,
     },
     traductionExpressionContainer: {

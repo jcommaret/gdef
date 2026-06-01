@@ -136,23 +136,13 @@ function DetailMot() {
 
         {/* Registre et domaine vedette */}
         {fullArticle.vedette["registre-vedette"] && (
-          <Text
-            style={[
-              style.text,
-              { fontSize: 12, color: "#666", fontStyle: "italic" },
-            ]}
-          >
-            Registre: {fullArticle.vedette["registre-vedette"]}
+          <Text style={[style.text, style.domainRegistre]}>
+            {fullArticle.vedette["registre-vedette"]}
           </Text>
         )}
         {fullArticle.vedette["domaine-vedette"] && (
-          <Text
-            style={[
-              style.text,
-              { fontSize: 12, color: "#666", fontStyle: "italic" },
-            ]}
-          >
-            Domaine: {fullArticle.vedette["domaine-vedette"]}
+          <Text style={[style.text, style.domainRegistre]}>
+            {fullArticle.vedette["domaine-vedette"]}
           </Text>
         )}
       </View>
@@ -171,12 +161,12 @@ function DetailMot() {
 
           {blocGram["registre-bloc-gram"] && (
             <Text style={[style.text, style.registreBlocGram]}>
-              Registre: {blocGram["registre-bloc-gram"]}
+              {blocGram["registre-bloc-gram"]}
             </Text>
           )}
           {blocGram["domaine-bloc-gram"] && (
             <Text style={[style.text, style.domaineBlocGram]}>
-              Domaine: {blocGram["domaine-bloc-gram"]}
+              {blocGram["domaine-bloc-gram"]}
             </Text>
           )}
 
@@ -228,18 +218,8 @@ function DetailMot() {
 
                   {/* Registre du sens vedette */}
                   {bloc["registre-sens-ved"] && (
-                    <Text
-                      style={[
-                        style.text,
-                        {
-                          fontSize: 12,
-                          color: "#666",
-                          fontStyle: "italic",
-                          marginBottom: 4,
-                        },
-                      ]}
-                    >
-                      Registre: {bloc["registre-sens-ved"]}
+                    <Text style={[style.text, style.domainRegistre, { marginBottom: 4 }]}>
+                      {bloc["registre-sens-ved"]}
                     </Text>
                   )}
 
@@ -298,13 +278,7 @@ function DetailMot() {
                             {exemple["exemple-est"]}
                             {(exemple["registre-exe-est"] ||
                               exemple["domaine-exe-est"]) && (
-                              <Text
-                                style={{
-                                  fontSize: 12,
-                                  color: "#666",
-                                  fontStyle: "italic",
-                                }}
-                              >
+                              <Text style={style.domainRegistre}>
                                 {" ("}
                                 {[
                                   exemple["registre-exe-est"],
@@ -346,17 +320,8 @@ function DetailMot() {
                                 </Text>
                               )}
                               {trad["registre-trad-exe"] && (
-                                <Text
-                                  style={[
-                                    style.text,
-                                    {
-                                      fontSize: 12,
-                                      color: "#666",
-                                      fontStyle: "italic",
-                                    },
-                                  ]}
-                                >
-                                  Registre: {trad["registre-trad-exe"]}
+                                <Text style={[style.text, style.domainRegistre]}>
+                                  {trad["registre-trad-exe"]}
                                 </Text>
                               )}
                             </View>
@@ -402,13 +367,8 @@ function DetailMot() {
 
                   {/* Registre de l'expression */}
                   {expr["registre-expression-est"] && (
-                    <Text
-                      style={[
-                        style.text,
-                        { fontSize: 12, color: "#666", fontStyle: "italic" },
-                      ]}
-                    >
-                      Registre: {expr["registre-expression-est"]}
+                    <Text style={[style.text, style.domainRegistre]}>
+                      {expr["registre-expression-est"]}
                     </Text>
                   )}
 
@@ -446,17 +406,8 @@ function DetailMot() {
 
                               {/* Registre de la traduction */}
                               {trad["registre-trad-expr"] && (
-                                <Text
-                                  style={[
-                                    style.text,
-                                    {
-                                      fontSize: 12,
-                                      color: "#666",
-                                      fontStyle: "italic",
-                                    },
-                                  ]}
-                                >
-                                  Registre trad.: {trad["registre-trad-expr"]}
+                                <Text style={[style.text, style.domainRegistre]}>
+                                  {trad["registre-trad-expr"]}
                                 </Text>
                               )}
 
