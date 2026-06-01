@@ -154,19 +154,23 @@ def extract_bloc_traduction_exe(bloc_trad_elem):
 def extract_exemple(exemple_elem):
     """Extrait un exemple selon le schéma."""
     exemple_data = {}
-    
+    blocs_trad = []
+
     for child in exemple_elem:
         tag = get_tag_name(child)
-        
+
         if tag == 'bloc-traduction-exe':
             trad_data = extract_bloc_traduction_exe(child)
             if trad_data:
-                exemple_data['bloc-traduction-exe'] = trad_data
+                blocs_trad.append(trad_data)
         else:
             text = extract_text_safely(child)
             if text:
                 exemple_data[tag] = text
-    
+
+    if blocs_trad:
+        exemple_data['blocs-traduction-exe'] = blocs_trad
+
     return exemple_data if exemple_data else None
 
 def extract_sous_bloc_semantique(sous_bloc_elem, french_index):

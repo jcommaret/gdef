@@ -321,65 +321,49 @@ function DetailMot() {
                           </Text>
                         )}
 
-                        {/* Traduction française */}
-                        {exemple["bloc-traduction-exe"] && (
-                          <View>
-                            {exemple["bloc-traduction-exe"][
-                              "indic-sem-exe"
-                            ] && (
-                              <Text
-                                style={[
-                                  style.text,
-                                  {
-                                    fontSize: 12,
-                                    color: "#666",
-                                    fontStyle: "italic",
-                                  },
-                                ]}
-                              >
-                                {
-                                  exemple["bloc-traduction-exe"][
-                                    "indic-sem-exe"
-                                  ]
-                                }
-                              </Text>
-                            )}
-                            {exemple["bloc-traduction-exe"][
-                              "traduction-exe"
-                            ] && (
-                              <Text style={[style.text, style.exempleFrancais]}>
-                                {exemple["bloc-traduction-exe"][
-                                  "proverbe-traduction-exe"
-                                ] === "true" && "◊ "}
-                                {
-                                  exemple["bloc-traduction-exe"][
-                                    "traduction-exe"
-                                  ]
-                                }
-                              </Text>
-                            )}
-                            {exemple["bloc-traduction-exe"][
-                              "registre-trad-exe"
-                            ] && (
-                              <Text
-                                style={[
-                                  style.text,
-                                  {
-                                    fontSize: 12,
-                                    color: "#666",
-                                    fontStyle: "italic",
-                                  },
-                                ]}
-                              >
-                                Registre:{" "}
-                                {
-                                  exemple["bloc-traduction-exe"][
-                                    "registre-trad-exe"
-                                  ]
-                                }
-                              </Text>
-                            )}
-                          </View>
+                        {/* Traductions françaises */}
+                        {exemple["blocs-traduction-exe"]?.map(
+                          (trad: any, tradIndex: number) => (
+                            <View key={tradIndex}>
+                              {trad["indic-sem-exe"] && (
+                                <Text
+                                  style={[
+                                    style.text,
+                                    {
+                                      fontSize: 12,
+                                      color: "#666",
+                                      fontStyle: "italic",
+                                    },
+                                  ]}
+                                >
+                                  {trad["indic-sem-exe"]}
+                                </Text>
+                              )}
+                              {trad["traduction-exe"] && (
+                                <Text
+                                  style={[style.text, style.exempleFrancais]}
+                                >
+                                  {trad["proverbe-traduction-exe"] === "true" &&
+                                    "◊ "}
+                                  {trad["traduction-exe"]}
+                                </Text>
+                              )}
+                              {trad["registre-trad-exe"] && (
+                                <Text
+                                  style={[
+                                    style.text,
+                                    {
+                                      fontSize: 12,
+                                      color: "#666",
+                                      fontStyle: "italic",
+                                    },
+                                  ]}
+                                >
+                                  Registre: {trad["registre-trad-exe"]}
+                                </Text>
+                              )}
+                            </View>
+                          ),
                         )}
                       </View>
                     ))}
