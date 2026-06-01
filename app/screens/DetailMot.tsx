@@ -291,33 +291,30 @@ function DetailMot() {
                     bloc.exemples.length > 0 &&
                     bloc.exemples.map((exemple: any, exempleIndex: number) => (
                       <View key={exempleIndex} style={style.exempleItem}>
-                        {/* Exemple estonien */}
+                        {/* Exemple estonien + domaine/registre sur la même ligne */}
                         {exemple["exemple-est"] && (
                           <Text style={[style.text, style.exempleEstonien]}>
                             {exemple["proverbe-exemple-est"] === "true" && "◊ "}
                             {exemple["exemple-est"]}
-                          </Text>
-                        )}
-
-                        {/* Registre et domaine de l'exemple */}
-                        {(exemple["registre-exe-est"] ||
-                          exemple["domaine-exe-est"]) && (
-                          <Text
-                            style={[
-                              style.text,
-                              {
-                                fontSize: 12,
-                                color: "#666",
-                                fontStyle: "italic",
-                              },
-                            ]}
-                          >
-                            {[
-                              exemple["registre-exe-est"],
-                              exemple["domaine-exe-est"],
-                            ]
-                              .filter(Boolean)
-                              .join(", ")}
+                            {(exemple["registre-exe-est"] ||
+                              exemple["domaine-exe-est"]) && (
+                              <Text
+                                style={{
+                                  fontSize: 12,
+                                  color: "#666",
+                                  fontStyle: "italic",
+                                }}
+                              >
+                                {" ("}
+                                {[
+                                  exemple["registre-exe-est"],
+                                  exemple["domaine-exe-est"],
+                                ]
+                                  .filter(Boolean)
+                                  .join(", ")}
+                                {")"}
+                              </Text>
+                            )}
                           </Text>
                         )}
 
