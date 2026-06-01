@@ -214,6 +214,7 @@ export const globalStyles = (isDarkMode: boolean) =>
       fontStyle: "italic",
       color: COLORS.secondary,
       alignSelf: "flex-start",
+      marginLeft: 3,
     },
     blocSemIndication: {
       color: COLORS.text,

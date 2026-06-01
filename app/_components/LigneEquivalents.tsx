@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
+import { FormattedText } from "./FormattedText";
 
 import type { Styles } from "../styles";
 
@@ -93,9 +94,10 @@ export function LigneEquivalents({
               </>
             )}
             {equiv.explication && (
-              <Text style={style.explicationEquiv}>
-                {hasEquivMot ? " " : ""}({equiv.explication})
-              </Text>
+              <FormattedText
+                text={(hasEquivMot ? " (" : "(") + equiv.explication + ")"}
+                style={style.explicationEquiv}
+              />
             )}
             {equiv["registre-equiv"] && (
               <Text style={style.equivalentsFrancais}>

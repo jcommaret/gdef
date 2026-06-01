@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+import { FormattedText } from "../_components/FormattedText";
 import { LigneEquivalents } from "../_components/LigneEquivalents";
 import { useDictionnaire } from "../contexts/DictionnaireContext";
 import { globalStyles } from "../styles";
@@ -246,12 +247,17 @@ function DetailMot() {
                       <View key={exempleIndex} style={style.exempleItem}>
                         {/* Exemple estonien + domaine/registre sur la même ligne */}
                         {exemple["exemple-est"] && (
-                          <Text style={[style.text, style.exempleEstonien]}>
-                            {exemple["proverbe-exemple-est"] === "true" && "◊ "}
-                            {exemple["exemple-est"]}
+                          <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "flex-end" }}>
+                            <FormattedText
+                              text={
+                                (exemple["proverbe-exemple-est"] === "true" ? "◊ " : "") +
+                                exemple["exemple-est"]
+                              }
+                              style={[style.text, style.exempleEstonien]}
+                            />
                             {(exemple["registre-exe-est"] ||
                               exemple["domaine-exe-est"]) && (
-                              <Text style={style.domainRegistre}>
+                              <Text style={[style.text, style.domainRegistre]}>
                                 {" ("}
                                 {[
                                   exemple["registre-exe-est"],
@@ -262,7 +268,7 @@ function DetailMot() {
                                 {")"}
                               </Text>
                             )}
-                          </Text>
+                          </View>
                         )}
 
                         {/* Traductions françaises */}
@@ -284,13 +290,13 @@ function DetailMot() {
                                 </Text>
                               )}
                               {trad["traduction-exe"] && (
-                                <Text
+                                <FormattedText
+                                  text={
+                                    (trad["proverbe-traduction-exe"] === "true" ? "◊ " : "") +
+                                    trad["traduction-exe"]
+                                  }
                                   style={[style.text, style.exempleFrancais]}
-                                >
-                                  {trad["proverbe-traduction-exe"] === "true" &&
-                                    "◊ "}
-                                  {trad["traduction-exe"]}
-                                </Text>
+                                />
                               )}
                               {trad["registre-trad-exe"] && (
                                 <Text style={[style.text, style.domainRegistre]}>
@@ -333,9 +339,10 @@ function DetailMot() {
                 <View key={index} style={style.expressionItem}>
                   {/* Expression estonienne */}
                   {expr["expression-est"] && (
-                    <Text style={[style.text, style.expressionEstonienne]}>
-                      {expr["expression-est"]}
-                    </Text>
+                    <FormattedText
+                      text={expr["expression-est"]}
+                      style={[style.text, style.expressionEstonienne]}
+                    />
                   )}
 
                   {/* Registre de l'expression */}
