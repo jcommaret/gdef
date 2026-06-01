@@ -434,23 +434,6 @@ function DetailMot() {
                                 </Text>
                               )}
 
-                              {/* Locution traduction */}
-                              {trad["locution-traduction-expression"] && (
-                                <Text
-                                  style={[
-                                    style.text,
-                                    {
-                                      fontSize: 12,
-                                      color: "#666",
-                                      fontStyle: "italic",
-                                    },
-                                  ]}
-                                >
-                                  Locution:{" "}
-                                  {trad["locution-traduction-expression"]}
-                                </Text>
-                              )}
-
                               {/* Traduction française */}
                               {trad["traduction-expr"] && (
                                 <Text
@@ -459,6 +442,7 @@ function DetailMot() {
                                     style.expressionFrancaise,
                                   ]}
                                 >
+                                  {trad["locution-traduction-expr"] === "true" && "◦ "}
                                   {trad["traduction-expr"]}
                                 </Text>
                               )}
