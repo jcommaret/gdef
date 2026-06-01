@@ -34,6 +34,18 @@ export default function RootLayout() {
           name="screens/DetailMot"
           options={{ headerShown: true, title: "Détail du mot" }}
         />
+        <Stack.Screen
+          name="screens/Credits"
+          options={{ headerShown: true, title: "Crédits" }}
+        />
+        <Stack.Screen
+          name="screens/LeProjet"
+          options={{ headerShown: true, title: "Le projet" }}
+        />
+        <Stack.Screen
+          name="screens/Contact"
+          options={{ headerShown: true, title: "Contact" }}
+        />
       </Stack>
     </DictionnaireProvider>
   );

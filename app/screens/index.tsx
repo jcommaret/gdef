@@ -294,11 +294,16 @@ function ListeMots() {
           onEndReachedThreshold={0.1}
           ListFooterComponent={renderFooter}
         />
-        <View style={styles.footerContainer}>
-          <Text>
-            © Association franco-estonienne de lexicographie et Institut de la
-            langue estonienne.
-          </Text>
+        <View style={[styles.footerContainer, { gap: 16 }]}>
+          <TouchableOpacity onPress={() => router.push("/screens/LeProjet")}>
+            <Text style={{ color: "#8E8E93", fontSize: 13 }}>Le projet</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/screens/Credits")}>
+            <Text style={{ color: "#8E8E93", fontSize: 13 }}>Crédits</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/screens/Contact")}>
+            <Text style={{ color: "#8E8E93", fontSize: 13 }}>Contact</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

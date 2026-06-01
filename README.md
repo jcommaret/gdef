@@ -192,7 +192,10 @@ L'index est calculé une fois dans un `useMemo` sur `sortedArticles`. La logique
 - `app/data/README_structure.md` — structure JSON des articles
 - `app/data/schema_article_complet.json` — schéma avec cardinalités
 
-## Crédits et licence des données
+## Crédits
 
-Dictionnaire **GDEF** — _Grand dictionnaire estonien-français_.  
-Données : © Association franco-estonienne de lexicographie et Institut de la langue estonienne. [estfra.ee/gdef](https://www.estfra.ee/gdef/).
+Voir l'écran **Crédits** dans l'application (lien en bas de la liste) ou [estfra.ee/auteurs.php](https://www.estfra.ee/auteurs.php).
+
+Dictionnaire **GDEF** — éditeur en chef : Antoine Chalvin (INALCO).  
+Données : © Association franco-estonienne de lexicographie et Institut de la langue estonienne.  
+Développement mobile : Jérôme Commaret.
