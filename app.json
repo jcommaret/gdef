@@ -34,9 +34,15 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-ios.png",
-          "resizeMode": "cover",
-          "backgroundColor": "#000000"
+          "backgroundColor": "#ffffff",
+          "ios": {
+            "image": "./assets/images/splash-ios.png",
+            "resizeMode": "contain"
+          },
+          "android": {
+            "image": "./assets/images/splash-android.png",
+            "resizeMode": "contain"
+          }
         }
       ]
     ],
