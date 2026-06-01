@@ -217,11 +217,11 @@ def extract_bloc_semantique(bloc_sem_elem, french_index):
         if registre_text:
             bloc_data['registre-sens-ved'] = registre_text
     
-    domaine_elem = bloc_sem_elem.find('.//{http://www.estfra.ee/~gdef/xmlschema}domaine-bloc-semantique')
-    if domaine_elem is not None:
-        domaine_text = extract_text_safely(domaine_elem)
-        if domaine_text:
-            bloc_data['domaine-bloc-semantique'] = domaine_text
+    NS = '{http://www.estfra.ee/~gdef/xmlschema}'
+    domaine_elems = bloc_sem_elem.findall(f'{NS}domaine-bloc-semantique')
+    domaines = [t for e in domaine_elems if (t := extract_text_safely(e))]
+    if domaines:
+        bloc_data['domaine-bloc-semantique'] = ", ".join(domaines)
     
     # Sous-blocs sémantiques
     sous_blocs_semantiques = []
