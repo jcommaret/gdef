@@ -36,7 +36,7 @@
         {
           "image": "./assets/images/splash-ios.png",
           "resizeMode": "cover",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#000000"
         }
       ]
     ],

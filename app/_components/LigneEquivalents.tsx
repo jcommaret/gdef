@@ -37,6 +37,9 @@ export function LigneEquivalents({
       )}
       {blocsEquivalents.map((equiv: any, idx: number) => {
         const motFr = equiv["article-francais"]?.vedette?.mot;
+        const grammaire = equiv["article-francais"]?.vedette?.grammaire;
+        const plurielIrr = grammaire?.["pluriel-irr"];
+        const feminIrr = grammaire?.["feminin-irr"];
         const hasEquivMot = Boolean(
           equiv.avant || motFr || equiv.apres || equiv["rection-equiv"],
         );
@@ -49,24 +52,29 @@ export function LigneEquivalents({
                 {equiv.avant && `${equiv.avant} `}
                 {motFr}
                 {equiv.apres && ` ${equiv.apres}`}
-                {equiv["article-francais"]?.vedette?.grammaire?.[
-                  "genre-nbr"
-                ] && (
+                {grammaire?.["genre-nbr"] && (
                   <Text style={style.genreExposant}>
-                    {" "}
-                    (
-                    {
-                      equiv["article-francais"].vedette.grammaire[
-                        "genre-nbr"
-                      ]
-                    }
-                    )
+                    {" "}({grammaire["genre-nbr"]})
                   </Text>
                 )}
                 {equiv["rection-equiv"]?.["rection-equiv-est"] &&
                   ` [est: ${equiv["rection-equiv"]["rection-equiv-est"]}]`}
                 {equiv["rection-equiv"]?.["rection-equiv-fra"] &&
                   ` [fra: ${equiv["rection-equiv"]["rection-equiv-fra"]}]`}
+              </Text>
+            )}
+            {plurielIrr && (
+              <Text>
+                {", "}
+                <Text style={style.equivalentsFrancais}>{plurielIrr}</Text>
+                <Text style={style.formeIrreguliere}> (pl.)</Text>
+              </Text>
+            )}
+            {feminIrr && (
+              <Text>
+                {", "}
+                <Text style={style.equivalentsFrancais}>{feminIrr}</Text>
+                <Text style={style.formeIrreguliere}> (f.)</Text>
               </Text>
             )}
             {equiv.explication && (

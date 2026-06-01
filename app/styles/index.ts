@@ -68,6 +68,7 @@ export interface Styles {
   traductionExpressionContainer: ViewStyle;
   traductionExpressionItem: ViewStyle;
   indicationSemExpr: TextStyle;
+  formeIrreguliere: TextStyle;
   renvoiContainer: ViewStyle;
   renvoiText: TextStyle;
   exempleItem: ViewStyle;
@@ -381,6 +382,11 @@ export const globalStyles = (isDarkMode: boolean) =>
       fontSize: 12,
       color: COLORS.secondary,
       fontStyle: "italic",
+    },
+    formeIrreguliere: {
+      fontSize: 12,
+      fontStyle: "italic",
+      color: COLORS.secondary,
     },
     renvoiContainer: {
       marginLeft: 8,

@@ -119,6 +119,7 @@ function ListeMots() {
 
             ctx["blocs-equivalents"]?.forEach((eq: any) => {
               const motFr = eq["article-francais"]?.vedette?.mot;
+              const grammaire = eq["article-francais"]?.vedette?.grammaire;
 
               if (motFr) {
                 const equivalent =
@@ -126,6 +127,10 @@ function ListeMots() {
                   motFr +
                   (eq.apres ? ` ${eq.apres}` : "");
                 contexteEquivalents.push(equivalent);
+                if (grammaire?.["pluriel-irr"])
+                  contexteEquivalents.push(`${grammaire["pluriel-irr"]} (pl.)`);
+                if (grammaire?.["feminin-irr"])
+                  contexteEquivalents.push(`${grammaire["feminin-irr"]} (f.)`);
               } else if (eq.avant || eq.apres) {
                 const equivalent =
                   (eq.avant || "") + (eq.apres ? ` ${eq.apres}` : "");
