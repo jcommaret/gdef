@@ -101,34 +101,7 @@ function DetailMot() {
           <View style={style.blocMorphContainer}>
             {fullArticle.vedette["bloc-morph"].formes && (
               <Text style={style.text}>
-                {(() => {
-                  const formes = fullArticle.vedette["bloc-morph"].formes;
-                  // Traitement spécial pour les mots composés (type "lcompose")
-                  if (
-                    fullArticle.vedette.type === "lcompose" &&
-                    formes.startsWith("+")
-                  ) {
-                    // Extraire la première partie du mot composé (avant la dernière partie)
-                    const mot = fullArticle.vedette.mot;
-                    const dernierePartie = formes
-                      .substring(1)
-                      .split(" ")[0]
-                      .replace(/'/g, "");
-                    const prefixe = mot.replace(
-                      new RegExp(dernierePartie + "$"),
-                      "",
-                    );
-                    // Remplacer le "+" par le préfixe et ajouter le préfixe à toutes les formes
-                    return formes
-                      .substring(1)
-                      .split(" ")
-                      .map((forme: string) =>
-                        forme ? prefixe + forme.replace(/'/g, "") : "",
-                      )
-                      .join(" ");
-                  }
-                  return formes;
-                })()}
+                {fullArticle.vedette["bloc-morph"].formes}
               </Text>
             )}
           </View>
