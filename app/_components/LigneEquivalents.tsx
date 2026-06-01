@@ -51,12 +51,12 @@ export function LigneEquivalents({
               <Text style={style.equivalentsFrancais}>
                 {equiv.avant && `${equiv.avant} `}
                 {motFr}
-                {equiv.apres && ` ${equiv.apres}`}
                 {grammaire?.["genre-nbr"] && (
                   <Text style={style.genreExposant}>
                     {" "}({grammaire["genre-nbr"]})
                   </Text>
                 )}
+                {equiv.apres && ` ${equiv.apres}`}
               </Text>
             )}
             {equiv["rection-equiv"]?.["rection-equiv-est"] && (
