@@ -16,7 +16,18 @@ import { globalStyles } from "../styles";
 import { Article } from "../_types/dictionary";
 import { formatCatGramsDisplay, getBlocsGram } from "../_utils/blocsGram";
 
-const ITEMS_PER_LOAD = 100; // Nombre d'éléments à charger à chaque fois
+const ITEMS_PER_LOAD = 100;
+
+function normalizeEst(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/õ/g, "o")
+    .replace(/ä/g, "a")
+    .replace(/ö/g, "o")
+    .replace(/ü/g, "u")
+    .replace(/š/g, "s")
+    .replace(/ž/g, "z");
+}
 
 function ListeMots() {
   const router = useRouter();
@@ -66,14 +77,40 @@ function ListeMots() {
     }, 100);
   }, [sortedArticles, currentIndex, isLoadingMore, searchText]);
 
+  // Index de recherche : mot estonien normalisé + équivalents français
+  const searchIndex = useMemo(() => {
+    return sortedArticles.map((article: Article) => {
+      const motEst = normalizeEst(article.vedette.mot);
+      const frenchMots: string[] = [];
+      getBlocsGram(article).forEach((blocGram: any) => {
+        blocGram["blocs-semantiques"]?.forEach((bs: any) => {
+          bs["sous-blocs-semantiques"]?.forEach((sbs: any) => {
+            sbs["blocs-contextuels"]?.forEach((bc: any) => {
+              bc["blocs-equivalents"]?.forEach((eq: any) => {
+                const motFr = eq["article-francais"]?.vedette?.mot;
+                if (motFr) frenchMots.push(motFr.toLowerCase());
+              });
+            });
+          });
+        });
+      });
+      return { motEst, frenchMots };
+    });
+  }, [sortedArticles]);
+
   // Recherche optimisée avec mémoïsation
   const filteredArticles = useMemo(() => {
     if (!searchText) return displayedArticles;
-    const searchLower = searchText.toLowerCase();
-    return sortedArticles.filter((article: Article) =>
-      article.vedette.mot.toLowerCase().startsWith(searchLower),
-    );
-  }, [sortedArticles, displayedArticles, searchText]);
+    const q = normalizeEst(searchText);
+    const qFr = searchText.toLowerCase();
+    return sortedArticles.filter((_: Article, idx: number) => {
+      const entry = searchIndex[idx];
+      return (
+        entry.motEst.includes(q) ||
+        entry.frenchMots.some((f) => f.startsWith(qFr))
+      );
+    });
+  }, [sortedArticles, displayedArticles, searchText, searchIndex]);
 
   const handleSearch = useCallback(
     (text: string) => {
