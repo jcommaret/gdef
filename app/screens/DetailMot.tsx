@@ -71,7 +71,7 @@ function DetailMot() {
           )}
           <Text style={style.itemMotText}>{fullArticle.vedette.mot}</Text>
           {fullArticle.vedette.hm && (
-            <Text style={style.vedetteCatGram}> {fullArticle.vedette.hm}</Text>
+            <Text style={style.vedetteHm}> {fullArticle.vedette.hm}</Text>
           )}
           {catGramDisplay && (
             <Text style={style.vedetteCatGram}> ({catGramDisplay})</Text>

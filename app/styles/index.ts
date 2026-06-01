@@ -28,6 +28,7 @@ export interface Styles {
   vedetteParticule: TextStyle;
   vedetteCatGram: TextStyle;
   vedetteType: TextStyle;
+  vedetteHm: TextStyle;
   genreExposant: TextStyle;
   blocGramContainer: ViewStyle;
   blocSemantiqueContainer: ViewStyle;
@@ -201,6 +202,11 @@ export const globalStyles = (isDarkMode: boolean) =>
     vedetteType: {
       fontSize: 14,
       color: COLORS.secondary,
+    },
+    vedetteHm: {
+      fontSize: 13,
+      fontWeight: "700",
+      color: isDarkMode ? COLORS.white : COLORS.text,
     },
     genreExposant: {
       fontSize: 10,

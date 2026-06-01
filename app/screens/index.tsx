@@ -173,6 +173,9 @@ function ListeMots() {
             <View style={styles.itemLeftColumn}>
               <View style={styles.itemHeaderRow}>
                 <Text style={styles.itemMotText}>{displayText}</Text>
+                {item.vedette.hm && (
+                  <Text style={styles.vedetteHm}> {item.vedette.hm}</Text>
+                )}
                 {catGram && <Text style={styles.itemCatGram}>({catGram})</Text>}
               </View>
               {equivalentsWithContext.length > 0 && (
