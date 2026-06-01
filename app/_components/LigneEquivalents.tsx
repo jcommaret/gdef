@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 import type { Styles } from "../styles";
 
@@ -24,7 +24,14 @@ export function LigneEquivalents({
   }
 
   return (
-    <Text style={[style.text, style.ligneEquivalents]}>
+    <View
+      style={{
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "flex-end",
+        marginBottom: 6,
+      }}
+    >
       {showIndicationSemantique2 && indicationSemantique2 && (
         <Text style={style.indicationSemantique2}>
           ({indicationSemantique2}){" "}
@@ -45,19 +52,21 @@ export function LigneEquivalents({
         );
 
         return (
-          <Text key={idx}>
-            {idx > 0 && ", "}
-            {hasEquivMot && (
-              <Text style={style.equivalentsFrancais}>
-                {equiv.avant && `${equiv.avant} `}
-                {motFr}
-                {grammaire?.["genre-nbr"] && (
-                  <Text style={style.genreExposant}>
-                    {" "}({grammaire["genre-nbr"]})
-                  </Text>
-                )}
-                {equiv.apres && ` ${equiv.apres}`}
+          <React.Fragment key={idx}>
+            {idx > 0 && <Text style={style.text}>{", "}</Text>}
+            {equiv.avant && (
+              <Text style={style.equivalentsFrancais}>{equiv.avant} </Text>
+            )}
+            {motFr && (
+              <Text style={style.equivalentsFrancais}>{motFr}</Text>
+            )}
+            {grammaire?.["genre-nbr"] && (
+              <Text style={style.genreExposant}>
+                ({grammaire["genre-nbr"]})
               </Text>
+            )}
+            {equiv.apres && (
+              <Text style={style.equivalentsFrancais}> {equiv.apres}</Text>
             )}
             {equiv["rection-equiv"]?.["rection-equiv-est"] && (
               <Text style={style.exempleEstonien}>
@@ -70,18 +79,18 @@ export function LigneEquivalents({
               </Text>
             )}
             {plurielIrr && (
-              <Text>
-                {", "}
+              <>
+                <Text style={style.text}>{", "}</Text>
                 <Text style={style.equivalentsFrancais}>{plurielIrr}</Text>
                 <Text style={style.formeIrreguliere}> (pl.)</Text>
-              </Text>
+              </>
             )}
             {feminIrr && (
-              <Text>
-                {", "}
+              <>
+                <Text style={style.text}>{", "}</Text>
                 <Text style={style.equivalentsFrancais}>{feminIrr}</Text>
                 <Text style={style.formeIrreguliere}> (f.)</Text>
-              </Text>
+              </>
             )}
             {equiv.explication && (
               <Text style={style.explicationEquiv}>
@@ -90,13 +99,12 @@ export function LigneEquivalents({
             )}
             {equiv["registre-equiv"] && (
               <Text style={style.equivalentsFrancais}>
-                {" "}
-                [{equiv["registre-equiv"]}]
+                {" "}[{equiv["registre-equiv"]}]
               </Text>
             )}
-          </Text>
+          </React.Fragment>
         );
       })}
-    </Text>
+    </View>
   );
 }

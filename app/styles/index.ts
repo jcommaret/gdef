@@ -211,11 +211,8 @@ export const globalStyles = (isDarkMode: boolean) =>
     },
     genreExposant: {
       fontSize: 10,
-      fontStyle: "italic",
-      marginLeft: 4,
       color: COLORS.secondary,
-      lineHeight: 10,
-      textAlignVertical: "top",
+      alignSelf: "flex-start",
     },
     blocSemIndication: {
       color: COLORS.text,
