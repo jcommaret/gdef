@@ -17,31 +17,24 @@ draw = ImageDraw.Draw(img)
 draw.rounded_rectangle([0, 0, SIZE, SIZE], radius=RADIUS, fill=BG)
 
 # ── Estonian flag (top strip, fully inside) ──────────────────────────────────
-FLAG_H = 72          # height of each flag strip
-FLAG_W = SIZE - 160  # width, centered
-FLAG_X = (SIZE - FLAG_W) // 2
-FLAG_TOP = 60
+FLAG_H = 150
 
-ET_COLORS = [(0, 114, 206), (0, 0, 0), (255, 255, 255)]
-for i, color in enumerate(ET_COLORS):
-    y0 = FLAG_TOP + i * (FLAG_H // 3)
-    y1 = FLAG_TOP + (i + 1) * (FLAG_H // 3)
-    draw.rectangle([FLAG_X, y0, FLAG_X + FLAG_W, y1], fill=color)
+for i, color in enumerate([(0, 114, 206), (0, 0, 0), (255, 255, 255)]):
+    y0 = i * (FLAG_H // 3)
+    y1 = (i + 1) * (FLAG_H // 3)
+    draw.rectangle([0, y0, SIZE, y1], fill=color)
 
-# ── French flag (bottom strip, fully inside) ─────────────────────────────────
-FLAG_BOTTOM_TOP = SIZE - FLAG_TOP - FLAG_H
-
-FR_COLORS = [(0, 85, 164), (255, 255, 255), (239, 65, 53)]
-stripe_w = FLAG_W // 3
-for i, color in enumerate(FR_COLORS):
-    x0 = FLAG_X + i * stripe_w
-    x1 = FLAG_X + (i + 1) * stripe_w
-    draw.rectangle([x0, FLAG_BOTTOM_TOP, x1, FLAG_BOTTOM_TOP + FLAG_H], fill=color)
+# ── French flag (bottom) ──────────────────────────────────────────────────────
+stripe_w = SIZE // 3
+for i, color in enumerate([(0, 85, 164), (255, 255, 255), (239, 65, 53)]):
+    x0 = i * stripe_w
+    x1 = (i + 1) * stripe_w
+    draw.rectangle([x0, SIZE - FLAG_H, x1, SIZE], fill=color)
 
 # ── Text ─────────────────────────────────────────────────────────────────────
 try:
-    font_title = ImageFont.truetype("/System/Library/Fonts/Supplemental/Georgia Bold.ttf", 128)
-    font_sub   = ImageFont.truetype("/System/Library/Fonts/Supplemental/Georgia.ttf", 72)
+    font_title = ImageFont.truetype("/System/Library/Fonts/Supplemental/Georgia Bold.ttf", 148)
+    font_sub   = ImageFont.truetype("/System/Library/Fonts/Supplemental/Georgia.ttf", 82)
 except:
     font_title = ImageFont.load_default()
     font_sub   = font_title
