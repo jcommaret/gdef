@@ -37,7 +37,7 @@
           "backgroundColor": "#0D1B2A",
           "ios": {
             "image": "./assets/images/splash-ios.png",
-            "resizeMode": "contain"
+            "resizeMode": "cover"
           },
           "android": {
             "image": "./assets/images/splash-android.png",
