@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDictionnaire } from "../contexts/DictionnaireContext";
 import { globalStyles } from "../styles";
 import { Article } from "../_types/dictionary";
-import { formatCatGramsDisplay, getBlocsGram, getEquivalentsWithContext } from "../_utils/blocsGram";
+import { formatCatGramsDisplay, getBlocsGram, getEquivalentsWithContext } from "../../utils/blocsGram";
 
 const ITEMS_PER_LOAD = 100;
 

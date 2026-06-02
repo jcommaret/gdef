@@ -11,7 +11,7 @@ import {
   formatCatGramsDisplay,
   getBlocsGram,
   shouldShowVedetteType,
-} from "../_utils/blocsGram";
+} from "../../utils/blocsGram";
 
 function DetailMot() {
   const params = useLocalSearchParams();
