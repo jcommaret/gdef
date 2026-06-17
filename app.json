@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-ios.png",
+      "image": "./assets/images/splash-ios.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000",
       "minDurationMs": 1500
