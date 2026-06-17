@@ -8,6 +8,12 @@
     "scheme": "gdef",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-ios.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000",
+      "minDurationMs": 1500
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.jcommaret.GDEF3",
@@ -30,21 +36,7 @@
     },
     "plugins": [
       "expo-router",
-      "expo-web-browser",
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#0D1B2A",
-          "ios": {
-            "image": "./assets/images/splash-ios.png",
-            "resizeMode": "cover"
-          },
-          "android": {
-            "image": "./assets/images/splash-android.png",
-            "resizeMode": "contain"
-          }
-        }
-      ]
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
