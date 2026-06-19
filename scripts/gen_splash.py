@@ -1,65 +1,77 @@
 #!/usr/bin/env python3
-"""Generate GDEF splash screen (1242x2688 @3x)."""
+"""Generate GDEF splash screens (iOS 1242x2688, Android 1440x3200)."""
 
 from PIL import Image, ImageDraw, ImageFont
-
-W, H = 1242, 2688
 
 BG   = (13, 27, 42)
 GOLD = (180, 145, 60)
 CREAM = (210, 195, 155)
 
-img = Image.new("RGB", (W, H), BG)
-draw = ImageDraw.Draw(img)
 
-# ── Estonian flag (top) ───────────────────────────────────────────────────────
-FLAG_H = 180
+def gen_splash(W, H, out):
+    img = Image.new("RGB", (W, H), BG)
+    draw = ImageDraw.Draw(img)
 
-for i, color in enumerate([(0, 114, 206), (0, 0, 0), (255, 255, 255)]):
-    y0 = i * (FLAG_H // 3)
-    y1 = (i + 1) * (FLAG_H // 3)
-    draw.rectangle([0, y0, W, y1], fill=color)
+    # Layout: top third = Estonian flag, middle third = text, bottom third = French flag
+    THIRD = H // 3
 
-# ── French flag (bottom) ──────────────────────────────────────────────────────
-stripe_w = W // 3
-for i, color in enumerate([(0, 85, 164), (255, 255, 255), (239, 65, 53)]):
-    x0 = i * stripe_w
-    x1 = (i + 1) * stripe_w
-    draw.rectangle([x0, H - FLAG_H, x1, H], fill=color)
+    # ── Estonian flag (top third) ─────────────────────────────────────────────
+    for i, color in enumerate([(0, 114, 206), (0, 0, 0), (255, 255, 255)]):
+        y0 = i * (THIRD // 3)
+        y1 = (i + 1) * (THIRD // 3)
+        draw.rectangle([0, y0, W, y1], fill=color)
 
-# ── Text (vertically centered) ────────────────────────────────────────────────
-try:
-    font_sub    = ImageFont.truetype("/System/Library/Fonts/Supplemental/Georgia Bold.ttf", 100)
-    font_desc   = ImageFont.truetype("/System/Library/Fonts/Supplemental/Georgia.ttf", 82)
-except:
-    font_sub = font_desc = ImageFont.load_default()
+    # ── French flag (bottom third) ────────────────────────────────────────────
+    stripe_w = W // 3
+    for i, color in enumerate([(0, 85, 164), (255, 255, 255), (239, 65, 53)]):
+        x0 = i * stripe_w
+        x1 = (i + 1) * stripe_w
+        draw.rectangle([x0, H - THIRD, x1, H], fill=color)
 
-# Auto-fit title font to 90% of width
-TITLE = "Sõnaraamat"
-MAX_W = int(W * 0.88)
-font_size = 220
-while font_size > 60:
-    try:
-        ft = ImageFont.truetype("/System/Library/Fonts/Supplemental/Georgia Bold.ttf", font_size)
-    except:
-        ft = ImageFont.load_default()
-    bbox = draw.textbbox((0, 0), TITLE, font=ft)
-    if bbox[2] - bbox[0] <= MAX_W:
-        break
-    font_size -= 4
-font_title = ft
+    # ── Text (centered in the middle third) ───────────────────────────────────
+    # Sizes are scaled relative to width so both resolutions look identical.
+    s = W / 1242.0
 
-CX = W // 2
-CY = H // 2
+    def georgia(bold, size):
+        path = "/System/Library/Fonts/Supplemental/Georgia Bold.ttf" if bold \
+            else "/System/Library/Fonts/Supplemental/Georgia.ttf"
+        try:
+            return ImageFont.truetype(path, int(size))
+        except Exception:
+            return ImageFont.load_default()
 
-draw.text((CX, CY - 140), TITLE,             font=font_title, fill=GOLD,  anchor="mm")
-draw.text((CX, CY + 60),  "EESTI · FRANÇAIS", font=font_sub,   fill=CREAM, anchor="mm")
+    font_sub  = georgia(True, 100 * s)
+    font_desc = georgia(False, 82 * s)
 
-LINE_W = 420
-draw.line([(CX - LINE_W//2, CY + 160), (CX + LINE_W//2, CY + 160)], fill=GOLD, width=5)
+    # Auto-fit title font to 88% of width
+    TITLE = "Sõnaraamat"
+    MAX_W = int(W * 0.88)
+    font_size = int(220 * s)
+    while font_size > int(60 * s):
+        ft = georgia(True, font_size)
+        bbox = draw.textbbox((0, 0), TITLE, font=ft)
+        if bbox[2] - bbox[0] <= MAX_W:
+            break
+        font_size -= 4
+    font_title = ft
 
-draw.text((CX, CY + 270), "Dictionnaire bilingue", font=font_desc, fill=CREAM, anchor="mm")
+    CX = W // 2
+    CY = H // 2
 
-out = "/Users/jcommaret/Sites/GDEF/assets/images/splash-ios.png"
-img.save(out, "PNG")
-print(f"Saved {out}")
+    draw.text((CX, CY - int(140 * s)), TITLE,              font=font_title, fill=GOLD,  anchor="mm")
+    draw.text((CX, CY + int(60 * s)),  "EESTI · FRANÇAIS",  font=font_sub,   fill=CREAM, anchor="mm")
+
+    LINE_W = int(420 * s)
+    draw.line([(CX - LINE_W // 2, CY + int(160 * s)), (CX + LINE_W // 2, CY + int(160 * s))],
+              fill=GOLD, width=max(1, int(5 * s)))
+
+    draw.text((CX, CY + int(270 * s)), "Dictionnaire bilingue", font=font_desc, fill=CREAM, anchor="mm")
+
+    img.save(out, "PNG")
+    print(f"Saved {out}")
+
+
+if __name__ == "__main__":
+    base = "/Users/jcommaret/Sites/GDEF/assets/images"
+    gen_splash(1242, 2688, f"{base}/splash-ios.png")
+    gen_splash(1440, 3200, f"{base}/splash-android.png")
