@@ -1,9 +1,18 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { AppBackground } from "@/components/AppBackground";
+import { useStackScrollPaddingTop } from "@/utils/navigation";
+
 export default function Contact() {
+  const scrollPaddingTop = useStackScrollPaddingTop();
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <AppBackground>
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={[styles.container, { paddingTop: scrollPaddingTop }]}
+    >
       <Text style={styles.title}>Contact</Text>
 
       <Text style={styles.intro}>
@@ -19,10 +28,15 @@ export default function Contact() {
         <Text style={styles.line}>51003 Tartu, Estonie</Text>
       </View>
     </ScrollView>
+    </AppBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  scroll: {
+    flex: 1,
+    backgroundColor: "transparent",
+  },
   container: {
     padding: 20,
     paddingBottom: 40,

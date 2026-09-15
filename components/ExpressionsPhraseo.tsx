@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 
 import { FormattedText } from "./FormattedText";
-import type { Styles } from "../styles";
+import type { Styles } from "@/styles";
 
 interface ExpressionsPhraseoProps {
   blocs: any[];
@@ -19,7 +19,7 @@ export function ExpressionsPhraseo({ blocs, style }: ExpressionsPhraseoProps) {
   if (valides.length === 0) return null;
 
   return (
-    <View style={style.expressionsContainer}>
+    <View>
       <Text style={[style.text, style.blocSemIndication]}>
         Expressions phraséologiques
       </Text>

@@ -1,4 +1,4 @@
-import { Article, BlocGram } from "../_types/dictionary";
+import { Article, BlocGram } from "@/types/dictionary";
 
 /** Chiffres romains pour numéroter les blocs grammaticaux (I, II, III…). */
 export function toRomanNumeral(n: number): string {

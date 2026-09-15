@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { FormattedText } from "./FormattedText";
 
-import type { Styles } from "../styles";
+import type { Styles } from "@/styles";
 
 interface LigneEquivalentsProps {
   style: Styles;

@@ -1,6 +1,9 @@
 import React from "react";
 import { Image, ImageSourcePropType, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { AppBackground } from "@/components/AppBackground";
+import { useStackScrollPaddingTop } from "@/utils/navigation";
+
 const logos: { source: ImageSourcePropType; label: string }[] = [
   { source: require("../../assets/logos/logo_oif.jpg"),     label: "Organisation Internationale de la Francophonie" },
   { source: require("../../assets/logos/logo_hm.jpg"),      label: "Ministère estonien de l'Éducation" },
@@ -21,8 +24,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export default function LeProjet() {
+  const scrollPaddingTop = useStackScrollPaddingTop();
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <AppBackground>
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={[styles.container, { paddingTop: scrollPaddingTop }]}
+    >
       <Text style={styles.title}>Grand dictionnaire estonien-français</Text>
       <Text style={styles.subtitle}>GDEF</Text>
 
@@ -97,10 +106,15 @@ export default function LeProjet() {
         <Text style={styles.footerText}>estfra.ee/gdef</Text>
       </View>
     </ScrollView>
+    </AppBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  scroll: {
+    flex: 1,
+    backgroundColor: "transparent",
+  },
   container: {
     padding: 20,
     paddingBottom: 40,

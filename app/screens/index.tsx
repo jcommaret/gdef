@@ -11,10 +11,16 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDictionnaire } from "../contexts/DictionnaireContext";
-import { globalStyles } from "../styles";
-import { Article } from "../_types/dictionary";
-import { formatCatGramsDisplay, getBlocsGram, getEquivalentsWithContext } from "../../utils/blocsGram";
+import { AppBackground } from "@/components/AppBackground";
+import { GlassSurface } from "@/components/GlassSurface";
+import { useDictionnaire } from "@/contexts/DictionnaireContext";
+import { globalStyles } from "@/styles";
+import { Article } from "@/types/dictionary";
+import {
+  formatCatGramsDisplay,
+  getBlocsGram,
+  getEquivalentsWithContext,
+} from "@/utils/blocsGram";
 
 const ITEMS_PER_LOAD = 100;
 
@@ -231,53 +237,62 @@ function ListeMots() {
 
   if (isLoading || !isReady) {
     return (
-      <SafeAreaView style={styles.loadingFullScreen}>
-        <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={styles.loadingFullScreenText}>
-          Chargement du dictionnaire...
-        </Text>
-      </SafeAreaView>
+      <AppBackground>
+        <SafeAreaView style={styles.loadingFullScreen}>
+          <ActivityIndicator size="large" color="#007AFF" />
+          <Text style={styles.loadingFullScreenText}>
+            Chargement du dictionnaire...
+          </Text>
+        </SafeAreaView>
+      </AppBackground>
     );
   }
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <View style={styles.mainContainer}>
-        <View style={styles.searchContainer}>
-          <View style={styles.searchBar}>
-            {Platform.OS === "web" ? (
-              <Text style={styles.searchIconWeb}>🔍</Text>
-            ) : (
-              <Ionicons
-                name="search"
-                size={20}
-                color="#8E8E93"
-                style={styles.searchIcon}
-              />
-            )}
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Rechercher un mot..."
-              onChangeText={handleSearch}
-              value={searchText}
-              placeholderTextColor="#8E8E93"
-              clearButtonMode="while-editing"
-            />
-            {searchText.length > 0 && (
-              <TouchableOpacity
-                onPress={handleReset}
-                style={styles.clearButton}
-              >
+    <AppBackground>
+      <SafeAreaView style={styles.mainContainer}>
+        <View style={styles.mainContainer}>
+          <View style={styles.searchContainer}>
+            <GlassSurface borderRadius={18} intensity={80}>
+              <View style={styles.searchBar}>
                 {Platform.OS === "web" ? (
-                  <Text style={styles.clearIconWeb}>✕</Text>
+                  <Text style={styles.searchIconWeb}>🔍</Text>
                 ) : (
-                  <Ionicons name="close-circle" size={20} color="#8E8E93" />
+                  <Ionicons
+                    name="search"
+                    size={20}
+                    color="#8E8E93"
+                    style={styles.searchIcon}
+                  />
                 )}
-              </TouchableOpacity>
-            )}
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="Rechercher un mot..."
+                  onChangeText={handleSearch}
+                  value={searchText}
+                  placeholderTextColor="#8E8E93"
+                  clearButtonMode="while-editing"
+                />
+                {searchText.length > 0 && (
+                  <TouchableOpacity
+                    onPress={handleReset}
+                    style={styles.clearButton}
+                  >
+                    {Platform.OS === "web" ? (
+                      <Text style={styles.clearIconWeb}>✕</Text>
+                    ) : (
+                      <Ionicons
+                        name="close-circle"
+                        size={20}
+                        color="#8E8E93"
+                      />
+                    )}
+                  </TouchableOpacity>
+                )}
+              </View>
+            </GlassSurface>
           </View>
-        </View>
-        <FlatList
+          <FlatList
           data={filteredArticles}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
@@ -294,19 +309,22 @@ function ListeMots() {
           onEndReachedThreshold={0.1}
           ListFooterComponent={renderFooter}
         />
-        <View style={[styles.footerContainer, { gap: 16 }]}>
-          <TouchableOpacity onPress={() => router.push("/screens/LeProjet")}>
-            <Text style={{ color: "#8E8E93", fontSize: 13 }}>Le projet</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("/screens/Credits")}>
-            <Text style={{ color: "#8E8E93", fontSize: 13 }}>Crédits</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("/screens/Contact")}>
-            <Text style={{ color: "#8E8E93", fontSize: 13 }}>Contact</Text>
-          </TouchableOpacity>
+          <GlassSurface borderRadius={20} intensity={64}>
+            <View style={[styles.footerContainer, { gap: 16 }]}>
+              <TouchableOpacity onPress={() => router.push("/screens/LeProjet")}>
+                <Text style={{ color: "#5c6570", fontSize: 13 }}>Le projet</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push("/screens/Credits")}>
+                <Text style={{ color: "#5c6570", fontSize: 13 }}>Crédits</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push("/screens/Contact")}>
+                <Text style={{ color: "#5c6570", fontSize: 13 }}>Contact</Text>
+              </TouchableOpacity>
+            </View>
+          </GlassSurface>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </AppBackground>
   );
 }
 

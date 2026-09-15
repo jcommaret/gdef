@@ -1,6 +1,9 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { AppBackground } from "@/components/AppBackground";
+import { useStackScrollPaddingTop } from "@/utils/navigation";
+
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <View style={styles.section}>
@@ -20,8 +23,14 @@ function Person({ name, role }: { name: string; role?: string }) {
 }
 
 export default function Credits() {
+  const scrollPaddingTop = useStackScrollPaddingTop();
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <AppBackground>
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={[styles.container, { paddingTop: scrollPaddingTop }]}
+    >
       <Text style={styles.title}>Grand dictionnaire estonien-français</Text>
       <Text style={styles.subtitle}>
         Réalisé par l'Association franco-estonienne de lexicographie (Tartu)
@@ -120,13 +129,19 @@ export default function Credits() {
         </Text>
       </View>
     </ScrollView>
+    </AppBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  scroll: {
+    flex: 1,
+    backgroundColor: "transparent",
+  },
   container: {
     padding: 20,
     paddingBottom: 40,
+    flexGrow: 1,
   },
   title: {
     fontSize: 20,

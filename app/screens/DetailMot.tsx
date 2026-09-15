@@ -2,23 +2,26 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-import { BlocSemantique } from "../_components/BlocSemantique";
-import { ExpressionsPhraseo } from "../_components/ExpressionsPhraseo";
-import { useDictionnaire } from "../contexts/DictionnaireContext";
-import { globalStyles } from "../styles";
-import { goBack } from "../_utils/navigation";
+import { AppBackground } from "@/components/AppBackground";
+import { BlocSemantique } from "@/components/BlocSemantique";
+import { ExpressionsPhraseo } from "@/components/ExpressionsPhraseo";
+import { GlassSurface } from "@/components/GlassSurface";
+import { useDictionnaire } from "@/contexts/DictionnaireContext";
+import { globalStyles } from "@/styles";
 import {
   formatBlocGramLabel,
   formatCatGramsDisplay,
   getBlocsGram,
   shouldShowVedetteType,
-} from "../../utils/blocsGram";
+} from "@/utils/blocsGram";
+import { goBack, useStackScrollPaddingTop } from "@/utils/navigation";
 
 function DetailMot() {
   const params = useLocalSearchParams();
   const articleId = params.articleId as string;
   const style = globalStyles(false);
   const router = useRouter();
+  const scrollPaddingTop = useStackScrollPaddingTop();
   const { articlesById, articlesByMot } = useDictionnaire();
 
   const fullArticle = useMemo(() => {
@@ -37,25 +40,47 @@ function DetailMot() {
 
   if (!fullArticle) {
     return (
-      <ScrollView contentContainerStyle={{ padding: 16 }}>
-        <View style={style.vedetteContainer}>
-          <Text style={style.text}>
-            ❌ Article non trouvé pour: {articleId}
-          </Text>
-          <TouchableOpacity onPress={() => goBack(router)}>
-            <Text style={[style.text, { color: "#007AFF", marginTop: 20 }]}>
-              ← Retour
+      <AppBackground>
+        <ScrollView
+          style={{ flex: 1, backgroundColor: "transparent" }}
+          contentContainerStyle={{
+            padding: 16,
+            paddingTop: scrollPaddingTop,
+          }}
+        >
+          <GlassSurface
+            style={style.vedetteContainer}
+            contentStyle={style.vedetteContainerInner}
+          >
+            <Text style={style.text}>
+              ❌ Article non trouvé pour: {articleId}
             </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            <TouchableOpacity onPress={() => goBack(router)}>
+              <Text style={[style.text, { color: "#007AFF", marginTop: 20 }]}>
+                ← Retour
+              </Text>
+            </TouchableOpacity>
+          </GlassSurface>
+        </ScrollView>
+      </AppBackground>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16 }}>
-      {/* VEDETTE */}
-      <View style={style.vedetteContainer}>
+    <AppBackground>
+      <ScrollView
+        style={{ flex: 1, backgroundColor: "transparent" }}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingBottom: 32,
+          paddingTop: scrollPaddingTop,
+        }}
+      >
+        {/* VEDETTE */}
+        <GlassSurface
+          style={style.vedetteContainer}
+          contentStyle={style.vedetteContainerInner}
+        >
         <Text>
           {fullArticle.vedette.particule && (
             <Text style={style.itemMotText}>
@@ -101,11 +126,15 @@ function DetailMot() {
             {fullArticle.vedette["domaine-vedette"]}
           </Text>
         )}
-      </View>
+        </GlassSurface>
 
       {/* BLOC(S) GRAMMATICAL(AUX) ET BLOCS SÉMANTIQUES */}
       {blocsGram.map((blocGram, bgIndex) => (
-        <View key={bgIndex} style={[style.blocGramContainer, { padding: 16 }]}>
+        <GlassSurface
+          key={bgIndex}
+          style={style.blocGramContainer}
+          contentStyle={style.blocGramContainerInner}
+        >
           {hasMultipleBlocsGram && blocGram["cat-gram"] && (
             <Text style={[style.text, style.blocGramLabel]}>
               {formatBlocGramLabel(bgIndex, blocGram["cat-gram"])}
@@ -134,17 +163,23 @@ function DetailMot() {
               />
             ),
           )}
-        </View>
+        </GlassSurface>
       ))}
 
       {/* EXPRESSIONS PHRASÉOLOGIQUES */}
       {fullArticle["blocs-phraseologiques"]?.length > 0 && (
-        <ExpressionsPhraseo
-          blocs={fullArticle["blocs-phraseologiques"]}
-          style={style}
-        />
+        <GlassSurface
+          style={style.expressionsContainer}
+          contentStyle={style.expressionsContainerInner}
+        >
+          <ExpressionsPhraseo
+            blocs={fullArticle["blocs-phraseologiques"]}
+            style={style}
+          />
+        </GlassSurface>
       )}
-    </ScrollView>
+      </ScrollView>
+    </AppBackground>
   );
 }
 

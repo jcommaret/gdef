@@ -3,8 +3,8 @@ import { Text, View } from "react-native";
 
 import { FormattedText } from "./FormattedText";
 import { LigneEquivalents } from "./LigneEquivalents";
-import { formatBlocSemantiqueNumero } from "../../utils/blocsGram";
-import type { Styles } from "../styles";
+import type { Styles } from "@/styles";
+import { formatBlocSemantiqueNumero } from "@/utils/blocsGram";
 
 interface BlocSemantiqueProps {
   bloc: any;

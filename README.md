@@ -94,19 +94,6 @@ GDEF/
 │   ├── screens/
 │   │   ├── index.tsx                  # Liste alphabétique et recherche
 │   │   └── DetailMot.tsx              # Fiche article (orchestration)
-│   ├── _components/
-│   │   ├── BlocSemantique.tsx         # Rendu d'un bloc sémantique
-│   │   ├── ExpressionsPhraseo.tsx     # Rendu des expressions phraséologiques
-│   │   ├── FormattedText.tsx          # Texte avec balises [sup] / [i]
-│   │   └── LigneEquivalents.tsx       # Ligne d'équivalents (flex-row)
-│   ├── _types/
-│   │   └── dictionary.ts             # Interfaces TypeScript
-│   ├── _utils/
-│   │   └── blocsGram.ts              # Fonctions utilitaires (blocs, équivalents…)
-│   ├── contexts/
-│   │   └── DictionnaireContext.tsx   # Chargement et index du dictionnaire
-│   ├── styles/
-│   │   └── index.ts                  # Styles partagés (globalStyles, Styles)
 │   └── data/
 │       ├── dictionnaire.json         # Base JSON (~30 Mo)
 │       ├── GDEF_psv-2023-03-30.xml   # Source estonienne
@@ -114,12 +101,23 @@ GDEF/
 │       ├── generation_dictionnaire.py
 │       ├── schema_article_complet.json
 │       └── README_structure.md
+├── components/                        # Composants UI (hors routes Expo Router)
+├── contexts/
+│   └── DictionnaireContext.tsx
+├── styles/
+│   ├── index.ts
+│   └── glass.ts
+├── types/
+│   └── dictionary.ts
+├── utils/
+│   ├── blocsGram.ts
+│   └── navigation.ts
 ├── assets/
 ├── app.json
 └── package.json
 ```
 
-> Les dossiers préfixés `_` sous `app/` ne sont **pas** des routes Expo Router.
+> Composants, styles, types et utilitaires sont **hors** du dossier `app/` pour qu’Expo Router ne les traite pas comme des routes.
 > Chaque fichier dispose d'un `export default` pour satisfaire le vérificateur de routes d'Expo.
 
 ## Modèle de données (aperçu)
@@ -178,7 +176,7 @@ La recherche opère sur un index pré-calculé au chargement :
 - **Mot estonien** : correspondance par inclusion (`includes`), insensible aux accents (`õ→o`, `ä→a`, `ö→o`, `ü→u`, `š→s`, `ž→z`)
 - **Équivalents français** : correspondance par début de mot (`startsWith`) sur tous les équivalents français de l'article
 
-L'index est calculé une fois dans un `useMemo` sur `sortedArticles`. La logique d'extraction des équivalents est centralisée dans `getEquivalentsWithContext()` (`_utils/blocsGram.ts`).
+L'index est calculé une fois dans un `useMemo` sur `sortedArticles`. La logique d'extraction des équivalents est centralisée dans `getEquivalentsWithContext()` (`utils/blocsGram.ts`).
 
 ## Stack technique
 

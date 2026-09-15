@@ -2,6 +2,8 @@ import { StyleSheet, TextStyle, ViewStyle } from "react-native";
 
 import type { Theme } from "@react-navigation/native";
 
+import { GLASS } from "./glass";
+
 // Constantes de couleurs pour uniformiser les styles
 const COLORS = {
   primary: "#007AFF",
@@ -15,22 +17,24 @@ const COLORS = {
   textLight: "#8E8E93",
   border: "rgba(0, 0, 0, 0.12)",
   borderLight: "rgba(200, 200, 200, 0.5)",
-  background: "#f8f9fa",
-  cardBackground: "rgba(255, 255, 255, 0.94)",
-  cardBackgroundLight: "rgba(255, 255, 255, 0.92)",
-  searchBackground: "rgba(248, 249, 250, 0.98)",
+  background: "transparent",
+  cardBackground: GLASS.fill,
+  cardBackgroundLight: GLASS.listItemFill,
+  searchBackground: "transparent",
   white: "#ffffff",
 };
 
 export interface Styles {
   text: TextStyle;
   vedetteContainer: ViewStyle;
+  vedetteContainerInner: ViewStyle;
   vedetteParticule: TextStyle;
   vedetteCatGram: TextStyle;
   vedetteType: TextStyle;
   vedetteHm: TextStyle;
   genreExposant: TextStyle;
   blocGramContainer: ViewStyle;
+  blocGramContainerInner: ViewStyle;
   blocSemantiqueContainer: ViewStyle;
   blocSemIndication: TextStyle;
   blocSemIndicationHeader: TextStyle;
@@ -82,6 +86,7 @@ export interface Styles {
   exempleDomaine: TextStyle;
   expressionItem: ViewStyle;
   expressionsContainer: ViewStyle;
+  expressionsContainerInner: ViewStyle;
   expressionEstonienne: TextStyle;
   expressionFrancaise: TextStyle;
 }
@@ -120,21 +125,14 @@ export const globalStyles = (isDarkMode: boolean) =>
   StyleSheet.create({
     searchContainer: {
       padding: 16,
-      backgroundColor: COLORS.searchBackground,
-      borderBottomWidth: 0.5,
-      borderBottomColor: COLORS.border,
+      paddingBottom: 12,
+      backgroundColor: "transparent",
     },
     searchBar: {
       flexDirection: "row" as const,
       alignItems: "center" as const,
-      backgroundColor: COLORS.white,
-      borderRadius: 16,
       paddingHorizontal: 12,
-      height: 40,
-      borderWidth: 1,
-      borderColor: COLORS.borderLight,
-      boxShadow: "0px 2px 8px rgba(0,0,0,0.1)",
-      elevation: 2,
+      minHeight: 44,
     },
     searchIcon: {
       marginRight: 8,
@@ -152,33 +150,26 @@ export const globalStyles = (isDarkMode: boolean) =>
       paddingBottom: 16,
     },
     itemText: {
-      backgroundColor: COLORS.cardBackgroundLight,
+      backgroundColor: GLASS.listItemFill,
       padding: 20,
       marginHorizontal: 12,
-      marginVertical: 3,
-      borderRadius: 12,
+      marginVertical: 4,
+      borderRadius: 14,
       borderWidth: 1,
-      borderColor: COLORS.borderLight,
-      boxShadow: "0px 2px 6px rgba(0,0,0,0.08)",
-      elevation: 2,
+      borderColor: GLASS.borderSubtle,
+      overflow: "hidden",
     },
     vedetteContainer: {
       marginBottom: 16,
+    },
+    vedetteContainerInner: {
       padding: 16,
-      backgroundColor: COLORS.cardBackground,
-      borderRadius: 16,
-      borderWidth: 1,
-      borderColor: COLORS.borderLight,
-      boxShadow: "0px 4px 12px rgba(0,0,0,0.12)",
-      elevation: 4,
     },
     blocGramContainer: {
-      backgroundColor: COLORS.cardBackground,
-      borderRadius: 16,
-      borderWidth: 1,
-      borderColor: COLORS.borderLight,
-      boxShadow: "0px 4px 12px rgba(0,0,0,0.12)",
-      elevation: 4,
+      marginBottom: 12,
+    },
+    blocGramContainerInner: {
+      padding: 16,
     },
     blocSemantiqueContainer: {
       paddingTop: 20,
@@ -192,8 +183,11 @@ export const globalStyles = (isDarkMode: boolean) =>
     },
     footerContainer: {
       flexDirection: "row",
-      padding: 16,
-      backgroundColor: COLORS.background,
+      justifyContent: "center",
+      marginHorizontal: 16,
+      marginBottom: 12,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
     },
     vedetteParticule: {
       color: COLORS.secondary,
@@ -265,14 +259,10 @@ export const globalStyles = (isDarkMode: boolean) =>
       paddingVertical: 8,
     },
     expressionsContainer: {
-      backgroundColor: COLORS.cardBackground,
-      padding: 12,
-      borderRadius: 16,
       marginTop: 8,
-      borderWidth: 1,
-      borderColor: COLORS.borderLight,
-      boxShadow: "0px 4px 12px rgba(0,0,0,0.12)",
-      elevation: 4,
+    },
+    expressionsContainerInner: {
+      padding: 12,
     },
     expressionEstonienne: {
       color: COLORS.estonien,
@@ -328,7 +318,7 @@ export const globalStyles = (isDarkMode: boolean) =>
     },
     loadingFullScreen: {
       flex: 1,
-      backgroundColor: COLORS.background,
+      backgroundColor: "transparent",
       justifyContent: "center",
       alignItems: "center",
     },

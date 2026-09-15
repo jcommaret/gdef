@@ -1,7 +1,7 @@
 import { HeaderBackButton } from "@react-navigation/elements";
 import { useRouter } from "expo-router";
 
-import { goBack } from "../_utils/navigation";
+import { goBack } from "@/utils/navigation";
 
 /** Bouton retour natif avec repli vers l’accueil si la pile est vide. */
 export function StackBackButton() {
@@ -10,7 +10,7 @@ export function StackBackButton() {
   return (
     <HeaderBackButton
       tintColor="#007AFF"
-      labelVisible={false}
+      displayMode="minimal"
       onPress={() => goBack(router)}
     />
   );
