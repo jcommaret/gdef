@@ -6,6 +6,7 @@ import { BlocSemantique } from "../_components/BlocSemantique";
 import { ExpressionsPhraseo } from "../_components/ExpressionsPhraseo";
 import { useDictionnaire } from "../contexts/DictionnaireContext";
 import { globalStyles } from "../styles";
+import { goBack } from "../_utils/navigation";
 import {
   formatBlocGramLabel,
   formatCatGramsDisplay,
@@ -41,7 +42,7 @@ function DetailMot() {
           <Text style={style.text}>
             ❌ Article non trouvé pour: {articleId}
           </Text>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => goBack(router)}>
             <Text style={[style.text, { color: "#007AFF", marginTop: 20 }]}>
               ← Retour
             </Text>
