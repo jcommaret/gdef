@@ -15,11 +15,13 @@ import {
   shouldShowVedetteType,
 } from "@/utils/blocsGram";
 import { goBack, useStackScrollPaddingTop } from "@/utils/navigation";
+import { useIsDarkMode } from "@/utils/useIsDarkMode";
 
 function DetailMot() {
   const params = useLocalSearchParams();
   const articleId = params.articleId as string;
-  const style = globalStyles(false);
+  const isDark = useIsDarkMode();
+  const style = globalStyles(isDark);
   const router = useRouter();
   const scrollPaddingTop = useStackScrollPaddingTop();
   const { articlesById, articlesByMot } = useDictionnaire();
@@ -43,6 +45,7 @@ function DetailMot() {
       <AppBackground>
         <ScrollView
           style={{ flex: 1, backgroundColor: "transparent" }}
+          contentInsetAdjustmentBehavior="never"
           contentContainerStyle={{
             padding: 16,
             paddingTop: scrollPaddingTop,
@@ -70,6 +73,7 @@ function DetailMot() {
     <AppBackground>
       <ScrollView
         style={{ flex: 1, backgroundColor: "transparent" }}
+        contentInsetAdjustmentBehavior="never"
         contentContainerStyle={{
           paddingHorizontal: 16,
           paddingBottom: 32,

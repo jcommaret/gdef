@@ -7,20 +7,26 @@ import {
   Platform,
   Text,
   TextInput,
+  StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { AppBackground } from "@/components/AppBackground";
 import { GlassSurface } from "@/components/GlassSurface";
 import { useDictionnaire } from "@/contexts/DictionnaireContext";
-import { globalStyles } from "@/styles";
+import { globalStyles, semanticColors } from "@/styles";
 import { Article } from "@/types/dictionary";
 import {
   formatCatGramsDisplay,
   getBlocsGram,
   getEquivalentsWithContext,
 } from "@/utils/blocsGram";
+import { HOME_FOOTER_HEIGHT } from "@/utils/navigation";
+import { useIsDarkMode } from "@/utils/useIsDarkMode";
 
 const ITEMS_PER_LOAD = 100;
 
@@ -42,7 +48,10 @@ function ListeMots() {
   const [displayedArticles, setDisplayedArticles] = useState<Article[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const styles = globalStyles(false);
+  const isDark = useIsDarkMode();
+  const styles = globalStyles(isDark);
+  const colors = semanticColors(isDark);
+  const insets = useSafeAreaInsets();
   const { articles, isReady } = useDictionnaire();
 
   // Tri et filtrage des articles (mémoïsé)
@@ -250,7 +259,7 @@ function ListeMots() {
 
   return (
     <AppBackground>
-      <SafeAreaView style={styles.mainContainer}>
+      <SafeAreaView style={styles.mainContainer} edges={["top", "left", "right"]}>
         <View style={styles.mainContainer}>
           <View style={styles.searchContainer}>
             <GlassSurface borderRadius={18} intensity={80}>
@@ -261,7 +270,7 @@ function ListeMots() {
                   <Ionicons
                     name="search"
                     size={20}
-                    color="#8E8E93"
+                    color={colors.placeholder}
                     style={styles.searchIcon}
                   />
                 )}
@@ -270,7 +279,7 @@ function ListeMots() {
                   placeholder="Rechercher un mot..."
                   onChangeText={handleSearch}
                   value={searchText}
-                  placeholderTextColor="#8E8E93"
+                  placeholderTextColor={colors.placeholder}
                   clearButtonMode="while-editing"
                 />
                 {searchText.length > 0 && (
@@ -284,7 +293,7 @@ function ListeMots() {
                       <Ionicons
                         name="close-circle"
                         size={20}
-                        color="#8E8E93"
+                        color={colors.placeholder}
                       />
                     )}
                   </TouchableOpacity>
@@ -293,11 +302,18 @@ function ListeMots() {
             </GlassSurface>
           </View>
           <FlatList
+          style={{ flex: 1 }}
           data={filteredArticles}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={true}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={[
+            styles.listContent,
+            {
+              paddingBottom:
+                HOME_FOOTER_HEIGHT + insets.bottom + 24,
+            },
+          ]}
           removeClippedSubviews={true}
           maxToRenderPerBatch={500}
           updateCellsBatchingPeriod={100}
@@ -309,19 +325,37 @@ function ListeMots() {
           onEndReachedThreshold={0.1}
           ListFooterComponent={renderFooter}
         />
-          <GlassSurface borderRadius={20} intensity={64}>
-            <View style={[styles.footerContainer, { gap: 16 }]}>
+          <View
+            pointerEvents="box-none"
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                justifyContent: "flex-end",
+                alignItems: "center",
+                paddingBottom: Math.max(insets.bottom - 10, 4),
+              },
+            ]}
+          >
+            <GlassSurface pill intensity={72}>
+            <View style={[styles.footerContainer, { gap: 26 }]}>
               <TouchableOpacity onPress={() => router.push("/screens/LeProjet")}>
-                <Text style={{ color: "#5c6570", fontSize: 13 }}>Le projet</Text>
+                <Text style={{ color: colors.linkMuted, fontSize: 13 }}>
+                  Le projet
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => router.push("/screens/Credits")}>
-                <Text style={{ color: "#5c6570", fontSize: 13 }}>Crédits</Text>
+                <Text style={{ color: colors.linkMuted, fontSize: 13 }}>
+                  Crédits
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => router.push("/screens/Contact")}>
-                <Text style={{ color: "#5c6570", fontSize: 13 }}>Contact</Text>
+                <Text style={{ color: colors.linkMuted, fontSize: 13 }}>
+                  Contact
+                </Text>
               </TouchableOpacity>
             </View>
           </GlassSurface>
+          </View>
         </View>
       </SafeAreaView>
     </AppBackground>

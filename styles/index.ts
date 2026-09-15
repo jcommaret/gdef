@@ -1,8 +1,8 @@
 import { StyleSheet, TextStyle, ViewStyle } from "react-native";
 
-import type { Theme } from "@react-navigation/native";
+import type { Theme } from "expo-router/react-navigation";
 
-import { GLASS } from "./glass";
+import { getGlass } from "./glass";
 
 // Constantes de couleurs pour uniformiser les styles
 const COLORS = {
@@ -18,8 +18,8 @@ const COLORS = {
   border: "rgba(0, 0, 0, 0.12)",
   borderLight: "rgba(200, 200, 200, 0.5)",
   background: "transparent",
-  cardBackground: GLASS.fill,
-  cardBackgroundLight: GLASS.listItemFill,
+  cardBackground: getGlass(false).fill,
+  cardBackgroundLight: getGlass(false).listItemFill,
   searchBackground: "transparent",
   white: "#ffffff",
 };
@@ -91,6 +91,21 @@ export interface Styles {
   expressionFrancaise: TextStyle;
 }
 
+/** Couleurs de texte / surfaces pour pages statiques et ajustements locaux. */
+export function semanticColors(isDarkMode: boolean) {
+  return {
+    textPrimary: isDarkMode ? "#f2f2f7" : "#1c1c1e",
+    textBody: isDarkMode ? "#e5e5ea" : "#333333",
+    textSecondary: isDarkMode ? "#98989f" : "#666666",
+    textMuted: isDarkMode ? "#8e8e93" : "#555555",
+    textFooter: isDarkMode ? "#636366" : "#888888",
+    borderHairline: isDarkMode ? "rgba(255,255,255,0.14)" : "#cccccc",
+    cardSurface: isDarkMode ? "rgba(44, 46, 58, 0.78)" : "#f5f5f7",
+    placeholder: isDarkMode ? "#8e8e93" : "#8E8E93",
+    linkMuted: isDarkMode ? "#98989f" : "#5c6570",
+  };
+}
+
 export const createNavigationTheme = (isDarkMode: boolean): Theme => ({
   dark: isDarkMode,
   colors: {
@@ -121,8 +136,12 @@ export const createNavigationTheme = (isDarkMode: boolean): Theme => ({
   },
 });
 
-export const globalStyles = (isDarkMode: boolean) =>
-  StyleSheet.create({
+export const globalStyles = (isDarkMode: boolean) => {
+  const glass = getGlass(isDarkMode);
+  const textPrimary = isDarkMode ? "#f2f2f7" : COLORS.text;
+  const textSecondary = isDarkMode ? "#98989f" : COLORS.secondary;
+
+  return StyleSheet.create({
     searchContainer: {
       padding: 16,
       paddingBottom: 12,
@@ -141,7 +160,7 @@ export const globalStyles = (isDarkMode: boolean) =>
       flex: 1,
       height: 40,
       fontSize: 16,
-      color: COLORS.text,
+      color: textPrimary,
     },
     clearButton: {
       padding: 4,
@@ -150,13 +169,13 @@ export const globalStyles = (isDarkMode: boolean) =>
       paddingBottom: 16,
     },
     itemText: {
-      backgroundColor: GLASS.listItemFill,
+      backgroundColor: glass.listItemFill,
       padding: 20,
       marginHorizontal: 12,
       marginVertical: 4,
       borderRadius: 14,
       borderWidth: 1,
-      borderColor: GLASS.borderSubtle,
+      borderColor: glass.borderSubtle,
       overflow: "hidden",
     },
     vedetteContainer: {
@@ -178,43 +197,42 @@ export const globalStyles = (isDarkMode: boolean) =>
     text: {
       fontSize: 14,
       marginBottom: 4,
-      color: isDarkMode ? COLORS.white : COLORS.text,
+      color: textPrimary,
       marginRight: 5,
     },
     footerContainer: {
       flexDirection: "row",
       justifyContent: "center",
-      marginHorizontal: 16,
-      marginBottom: 12,
-      paddingVertical: 12,
-      paddingHorizontal: 16,
+      alignItems: "center",
+      paddingVertical: 10,
+      paddingHorizontal: 30,
     },
     vedetteParticule: {
-      color: COLORS.secondary,
+      color: textSecondary,
     },
     vedetteCatGram: {
       fontSize: 12,
-      color: COLORS.secondary,
+      color: textSecondary,
       fontStyle: "italic",
     },
     vedetteType: {
       fontSize: 14,
-      color: COLORS.secondary,
+      color: textSecondary,
     },
     vedetteHm: {
       fontSize: 13,
       fontWeight: "700",
-      color: isDarkMode ? COLORS.white : COLORS.text,
+      color: textPrimary,
     },
     genreExposant: {
       fontSize: 10,
       fontStyle: "italic",
-      color: COLORS.secondary,
+      color: textSecondary,
       alignSelf: "flex-start",
       marginLeft: 3,
     },
     blocSemIndication: {
-      color: COLORS.text,
+      color: textPrimary,
       fontWeight: "500",
     },
     blocSemIndicationHeader: {
@@ -223,7 +241,7 @@ export const globalStyles = (isDarkMode: boolean) =>
     },
     indicSemExemple: {
       fontSize: 12,
-      color: COLORS.secondary,
+      color: textSecondary,
       fontStyle: "italic",
     },
     flexRowWrap: {
@@ -233,14 +251,14 @@ export const globalStyles = (isDarkMode: boolean) =>
     },
     blocSemDomaine: {
       fontSize: 11,
-      color: COLORS.secondary,
+      color: textSecondary,
       fontVariant: ["small-caps"],
     },
     exempleItem: {
       paddingVertical: 8,
       borderTopWidth: 0.5,
       borderBottomWidth: 0.5,
-      borderColor: COLORS.border,
+      borderColor: isDarkMode ? "rgba(255,255,255,0.12)" : COLORS.border,
     },
     exempleEstonien: {
       color: COLORS.estonien,
@@ -255,7 +273,7 @@ export const globalStyles = (isDarkMode: boolean) =>
     expressionItem: {
       borderTopWidth: 0.5,
       borderBottomWidth: 0.5,
-      borderColor: COLORS.border,
+      borderColor: isDarkMode ? "rgba(255,255,255,0.12)" : COLORS.border,
       paddingVertical: 8,
     },
     expressionsContainer: {
@@ -291,10 +309,11 @@ export const globalStyles = (isDarkMode: boolean) =>
     itemMotText: {
       fontSize: 16,
       fontWeight: "bold",
+      color: textPrimary,
     },
     itemCatGram: {
       fontSize: 12,
-      color: COLORS.secondary,
+      color: textSecondary,
       fontStyle: "italic",
       marginLeft: 8,
     },
@@ -305,7 +324,7 @@ export const globalStyles = (isDarkMode: boolean) =>
     },
     itemInfoButton: {
       fontSize: 13,
-      color: COLORS.text,
+      color: textPrimary,
       fontWeight: "bold",
     },
     loadingContainer: {
@@ -314,7 +333,7 @@ export const globalStyles = (isDarkMode: boolean) =>
     },
     loadingText: {
       marginTop: 8,
-      color: COLORS.textLight,
+      color: textSecondary,
     },
     loadingFullScreen: {
       flex: 1,
@@ -325,7 +344,7 @@ export const globalStyles = (isDarkMode: boolean) =>
     loadingFullScreenText: {
       marginTop: 10,
       fontSize: 16,
-      color: COLORS.textLight,
+      color: textSecondary,
     },
     mainContainer: {
       flex: 1,
@@ -333,11 +352,11 @@ export const globalStyles = (isDarkMode: boolean) =>
     },
     searchIconWeb: {
       marginRight: 8,
-      color: COLORS.textLight,
+      color: textSecondary,
       fontSize: 16,
     },
     clearIconWeb: {
-      color: COLORS.textLight,
+      color: textSecondary,
       fontSize: 16,
     },
     // Styles pour DetailMot
@@ -365,29 +384,29 @@ export const globalStyles = (isDarkMode: boolean) =>
     explicationEquiv: {
       fontStyle: "italic",
       fontWeight: "normal",
-      color: COLORS.explication,
+      color: textPrimary,
       fontSize: 14,
     },
     blocGramLabel: {
       fontSize: 15,
       fontWeight: "700",
-      color: COLORS.text,
+      color: textPrimary,
       marginBottom: 10,
     },
     domainRegistre: {
       fontSize: 11,
-      color: COLORS.secondary,
+      color: textSecondary,
       fontVariant: ["small-caps"],
     },
     registreBlocGram: {
       fontSize: 11,
-      color: COLORS.secondary,
+      color: textSecondary,
       fontVariant: ["small-caps"],
       marginBottom: 4,
     },
     domaineBlocGram: {
       fontSize: 11,
-      color: COLORS.secondary,
+      color: textSecondary,
       fontVariant: ["small-caps"],
       marginBottom: 8,
     },
@@ -399,22 +418,23 @@ export const globalStyles = (isDarkMode: boolean) =>
     },
     indicationSemExpr: {
       fontSize: 12,
-      color: COLORS.secondary,
+      color: textSecondary,
       fontStyle: "italic",
     },
     formeIrreguliere: {
       fontSize: 12,
       fontStyle: "italic",
-      color: COLORS.secondary,
+      color: textSecondary,
     },
     renvoiContainer: {
       marginLeft: 8,
     },
     renvoiText: {
       fontSize: 12,
-      color: COLORS.secondary,
+      color: textSecondary,
       fontStyle: "italic",
     },
   });
+};
 
 export default globalStyles;

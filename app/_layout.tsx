@@ -1,11 +1,13 @@
 import {
+  DarkTheme,
   DefaultTheme,
   ThemeProvider,
-} from "@react-navigation/native";
+} from "expo-router/react-navigation";
 import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import { Platform, StyleSheet } from "react-native";
+import { useEffect, useMemo } from "react";
+import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -13,22 +15,87 @@ import { AppBackground } from "@/components/AppBackground";
 import { HeaderGlassBackground } from "@/components/HeaderGlassBackground";
 import { StackBackButton } from "@/components/StackBackButton";
 import DictionnaireProvider from "@/contexts/DictionnaireContext";
+import { useIsDarkMode } from "@/utils/useIsDarkMode";
 
-const navigationTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: "transparent",
-    card: "transparent",
-  },
-};
-
-// Empêcher la disparition automatique du splash screen
 SplashScreen.preventAutoHideAsync();
+
+function RootStack() {
+  const isDark = useIsDarkMode();
+  const headerForeground = isDark ? "#f2f2f7" : "#1c1c1e";
+
+  const navigationTheme = useMemo(() => {
+    const base = isDark ? DarkTheme : DefaultTheme;
+    return {
+      ...base,
+      colors: {
+        ...base.colors,
+        background: "transparent",
+        card: "transparent",
+      },
+    };
+  }, [isDark]);
+
+  return (
+    <ThemeProvider value={navigationTheme}>
+      <StatusBar style={isDark ? "light" : "dark"} />
+      <AppBackground>
+        <Stack
+          screenOptions={{
+            headerBackTitle: "",
+            headerBackVisible: false,
+            headerBackTitleVisible: false,
+            gestureEnabled: true,
+            fullScreenGestureEnabled: true,
+            headerLeft: () => <StackBackButton />,
+            headerLeftContainerStyle: {
+              backgroundColor: "transparent",
+              minWidth: 36,
+              marginLeft: 0,
+            },
+            headerShadowVisible: false,
+            headerTransparent: true,
+            headerTintColor: headerForeground,
+            headerTitleStyle: {
+              fontWeight: "600",
+              color: headerForeground,
+            },
+            headerStyle: { backgroundColor: "transparent" },
+            headerBackground: () => <HeaderGlassBackground />,
+            contentStyle: { backgroundColor: "transparent" },
+          }}
+        >
+          <Stack.Screen
+            name="index"
+            options={{
+              headerShown: false,
+              title: "",
+              headerLeft: undefined,
+            }}
+          />
+          <Stack.Screen
+            name="screens/DetailMot"
+            options={{ headerShown: true, title: "Détail du mot" }}
+          />
+          <Stack.Screen
+            name="screens/Credits"
+            options={{ headerShown: true, title: "Crédits" }}
+          />
+          <Stack.Screen
+            name="screens/LeProjet"
+            options={{ headerShown: true, title: "Le projet" }}
+          />
+          <Stack.Screen
+            name="screens/Contact"
+            options={{ headerShown: true, title: "Contact" }}
+          />
+        </Stack>
+      </AppBackground>
+    </ThemeProvider>
+  );
+}
 
 export default function RootLayout() {
   useEffect(() => {
-    // Masquer le splash screen une fois que le layout est prêt
     const hideSplashScreen = async () => {
       try {
         await SplashScreen.hideAsync();
@@ -37,9 +104,7 @@ export default function RootLayout() {
       }
     };
 
-    // Petit délai pour s'assurer que tout est rendu
     const timer = setTimeout(hideSplashScreen, 500);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -47,53 +112,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
         <DictionnaireProvider>
-          <ThemeProvider value={navigationTheme}>
-            <AppBackground>
-              <Stack
-                screenOptions={{
-                  headerBackTitle: "",
-                  gestureEnabled: true,
-                  fullScreenGestureEnabled: true,
-                  headerLeft: () => <StackBackButton />,
-                  headerShadowVisible: false,
-                  headerTransparent: true,
-                  headerStyle: { backgroundColor: "transparent" },
-                  headerBackground: () => <HeaderGlassBackground />,
-                  contentStyle: { backgroundColor: "transparent" },
-                  ...Platform.select({
-                    ios: {
-                      headerBlurEffect: "systemChromeMaterial",
-                    },
-                  }),
-                }}
-              >
-                <Stack.Screen
-                  name="index"
-                  options={{
-                    headerShown: false,
-                    title: "",
-                    headerLeft: undefined,
-                  }}
-                />
-                <Stack.Screen
-                  name="screens/DetailMot"
-                  options={{ headerShown: true, title: "Détail du mot" }}
-                />
-                <Stack.Screen
-                  name="screens/Credits"
-                  options={{ headerShown: true, title: "Crédits" }}
-                />
-                <Stack.Screen
-                  name="screens/LeProjet"
-                  options={{ headerShown: true, title: "Le projet" }}
-                />
-                <Stack.Screen
-                  name="screens/Contact"
-                  options={{ headerShown: true, title: "Contact" }}
-                />
-              </Stack>
-            </AppBackground>
-          </ThemeProvider>
+          <RootStack />
         </DictionnaireProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
