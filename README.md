@@ -15,8 +15,9 @@ Application mobile et web du **GDEF** (_Grand dictionnaire estonien-français_),
 
 ## Prérequis
 
-- [Node.js](https://nodejs.org/) 18+ (LTS recommandé)
+- [Node.js](https://nodejs.org/) **24** (voir `.nvmrc` ; 20+ minimum)
 - npm
+- [nvm](https://github.com/nvm-sh/nvm) recommandé : `nvm install && nvm use`
 - Pour iOS : Xcode et simulateur (ou appareil physique avec Expo Go)
 - Pour Android : Android Studio / émulateur (ou Expo Go)
 - Pour régénérer les données : **Python 3**
@@ -24,8 +25,9 @@ Application mobile et web du **GDEF** (_Grand dictionnaire estonien-français_),
 ## Installation
 
 ```bash
-git clone <url-du-repo>
+git clone https://github.com/jcommaret/gdef.git
 cd GDEF
+nvm use
 npm install
 ```
 
@@ -65,8 +67,8 @@ Puis, dans le terminal Expo :
 Autres scripts :
 
 ```bash
-npm run ios      # expo start --ios
-npm run android  # expo start --android
+npm run ios      # expo run:ios (build natif)
+npm run android  # expo run:android (build natif)
 npm run web      # expo start --web
 npm run lint     # ESLint
 ```
@@ -182,8 +184,8 @@ L'index est calculé une fois dans un `useMemo` sur `sortedArticles`. La logique
 
 ## Stack technique
 
-- **Expo SDK 54** — React Native 0.81, React 19
-- **Expo Router 6** — navigation fichier
+- **Expo SDK 56** — React Native 0.85, React 19.2
+- **Expo Router 56** — navigation fichier
 - **TypeScript**
 - Données : JSON dérivé du XML GDEF (namespace `http://www.estfra.ee/~gdef/xmlschema`)
 
