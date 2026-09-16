@@ -17,6 +17,7 @@ import {
 } from "react-native-safe-area-context";
 import { AppBackground } from "@/components/AppBackground";
 import { GlassSurface } from "@/components/GlassSurface";
+import { HomeFooterNav } from "@/components/HomeFooterNav";
 import { useDictionnaire } from "@/contexts/DictionnaireContext";
 import { globalStyles, semanticColors } from "@/styles";
 import { Article } from "@/types/dictionary";
@@ -238,17 +239,17 @@ function ListeMots() {
     if (!isLoadingMore || searchText) return null;
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" color="#007AFF" />
+        <ActivityIndicator size="small" color={colors.accentBlue} />
         <Text style={styles.loadingText}>Chargement de plus de mots...</Text>
       </View>
     );
-  }, [isLoadingMore, searchText, styles]);
+  }, [isLoadingMore, searchText, styles, colors.accentBlue]);
 
   if (isLoading || !isReady) {
     return (
       <AppBackground>
         <SafeAreaView style={styles.loadingFullScreen}>
-          <ActivityIndicator size="large" color="#007AFF" />
+          <ActivityIndicator size="large" color={colors.accentBlue} />
           <Text style={styles.loadingFullScreenText}>
             Chargement du dictionnaire...
           </Text>
@@ -325,37 +326,7 @@ function ListeMots() {
           onEndReachedThreshold={0.1}
           ListFooterComponent={renderFooter}
         />
-          <View
-            pointerEvents="box-none"
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                justifyContent: "flex-end",
-                alignItems: "center",
-                paddingBottom: Math.max(insets.bottom - 10, 4),
-              },
-            ]}
-          >
-            <GlassSurface pill intensity={72}>
-            <View style={[styles.footerContainer, { gap: 26 }]}>
-              <TouchableOpacity onPress={() => router.push("/screens/LeProjet")}>
-                <Text style={{ color: colors.linkMuted, fontSize: 13 }}>
-                  Le projet
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => router.push("/screens/Credits")}>
-                <Text style={{ color: colors.linkMuted, fontSize: 13 }}>
-                  Crédits
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => router.push("/screens/Contact")}>
-                <Text style={{ color: colors.linkMuted, fontSize: 13 }}>
-                  Contact
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </GlassSurface>
-          </View>
+          <HomeFooterNav />
         </View>
       </SafeAreaView>
     </AppBackground>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TextStyle, View } from "react-native";
+import { StyleSheet, Text, TextStyle, View } from "react-native";
 
 type Segment =
   | { kind: "text"; content: string }
@@ -45,6 +45,9 @@ interface FormattedTextProps {
  * that alignSelf: 'flex-start' actually raises the text.
  */
 export function FormattedText({ text, style }: FormattedTextProps) {
+  const flatStyle = StyleSheet.flatten(style) ?? {};
+  const baseColor = flatStyle.color;
+
   if (!/\[/.test(text)) {
     return <Text style={style}>{text}</Text>;
   }
@@ -59,7 +62,13 @@ export function FormattedText({ text, style }: FormattedTextProps) {
       <Text style={style}>
         {segments.map((seg, i) =>
           seg.kind === "italic" ? (
-            <Text key={i} style={{ fontStyle: "italic" }}>
+            <Text
+              key={i}
+              style={{
+                fontStyle: "italic",
+                ...(baseColor != null ? { color: baseColor } : {}),
+              }}
+            >
               {seg.content}
             </Text>
           ) : (
@@ -88,7 +97,16 @@ export function FormattedText({ text, style }: FormattedTextProps) {
         }
         if (seg.kind === "italic") {
           return (
-            <Text key={i} style={[...styles, { fontStyle: "italic" }]}>
+            <Text
+              key={i}
+              style={[
+                ...styles,
+                {
+                  fontStyle: "italic",
+                  ...(baseColor != null ? { color: baseColor } : {}),
+                },
+              ]}
+            >
               {seg.content}
             </Text>
           );

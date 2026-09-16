@@ -4,10 +4,13 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import { AppBackground } from "@/components/AppBackground";
 import { BlocSemantique } from "@/components/BlocSemantique";
-import { ExpressionsPhraseo } from "@/components/ExpressionsPhraseo";
+import {
+  ExpressionsPhraseo,
+  hasExpressionsPhraseo,
+} from "@/components/ExpressionsPhraseo";
 import { GlassSurface } from "@/components/GlassSurface";
 import { useDictionnaire } from "@/contexts/DictionnaireContext";
-import { globalStyles } from "@/styles";
+import { globalStyles, semanticColors } from "@/styles";
 import {
   formatBlocGramLabel,
   formatCatGramsDisplay,
@@ -59,7 +62,12 @@ function DetailMot() {
               ❌ Article non trouvé pour: {articleId}
             </Text>
             <TouchableOpacity onPress={() => goBack(router)}>
-              <Text style={[style.text, { color: "#007AFF", marginTop: 20 }]}>
+              <Text
+                style={[
+                  style.text,
+                  { color: semanticColors(isDark).accentBlue, marginTop: 20 },
+                ]}
+              >
                 ← Retour
               </Text>
             </TouchableOpacity>
@@ -170,8 +178,8 @@ function DetailMot() {
         </GlassSurface>
       ))}
 
-      {/* EXPRESSIONS PHRASÉOLOGIQUES */}
-      {fullArticle["blocs-phraseologiques"]?.length > 0 && (
+      {/* EXPRESSIONS PHRASÉOLOGIQUES (carte seulement si contenu affichable) */}
+      {hasExpressionsPhraseo(fullArticle["blocs-phraseologiques"]) && (
         <GlassSurface
           style={style.expressionsContainer}
           contentStyle={style.expressionsContainerInner}

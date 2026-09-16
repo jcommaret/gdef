@@ -74,12 +74,12 @@ function createCreditsStyles(isDark: boolean) {
     sectionTitle: {
       fontSize: 13,
       fontWeight: "700",
-      color: "#007AFF",
+      color: c.sectionTitle,
       textTransform: "uppercase",
       letterSpacing: 0.5,
       marginBottom: 8,
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: "#007AFF",
+      borderBottomColor: c.sectionTitle,
       paddingBottom: 4,
     },
     person: {

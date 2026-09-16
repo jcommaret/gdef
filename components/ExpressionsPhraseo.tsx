@@ -9,12 +9,21 @@ interface ExpressionsPhraseoProps {
   style: Styles;
 }
 
-export function ExpressionsPhraseo({ blocs, style }: ExpressionsPhraseoProps) {
-  const valides = blocs.filter(
+export function filterValidExpressionBlocs(blocs: any[] | undefined): any[] {
+  if (!blocs?.length) return [];
+  return blocs.filter(
     (expr) =>
       expr["expression-est"] ||
       expr["blocs-traduction-expr"]?.some((t: any) => t["traduction-expr"]),
   );
+}
+
+export function hasExpressionsPhraseo(blocs: any[] | undefined): boolean {
+  return filterValidExpressionBlocs(blocs).length > 0;
+}
+
+export function ExpressionsPhraseo({ blocs, style }: ExpressionsPhraseoProps) {
+  const valides = filterValidExpressionBlocs(blocs);
 
   if (valides.length === 0) return null;
 

@@ -95,14 +95,17 @@ export interface Styles {
 export function semanticColors(isDarkMode: boolean) {
   return {
     textPrimary: isDarkMode ? "#f2f2f7" : "#1c1c1e",
-    textBody: isDarkMode ? "#e5e5ea" : "#333333",
-    textSecondary: isDarkMode ? "#98989f" : "#666666",
-    textMuted: isDarkMode ? "#8e8e93" : "#555555",
-    textFooter: isDarkMode ? "#636366" : "#888888",
-    borderHairline: isDarkMode ? "rgba(255,255,255,0.14)" : "#cccccc",
-    cardSurface: isDarkMode ? "rgba(44, 46, 58, 0.78)" : "#f5f5f7",
-    placeholder: isDarkMode ? "#8e8e93" : "#8E8E93",
-    linkMuted: isDarkMode ? "#98989f" : "#5c6570",
+    textBody: isDarkMode ? "#e8e8ed" : "#333333",
+    textSecondary: isDarkMode ? "#b3b3ba" : "#666666",
+    textMuted: isDarkMode ? "#a2a2ab" : "#555555",
+    textFooter: isDarkMode ? "#909099" : "#888888",
+    borderHairline: isDarkMode ? "rgba(255,255,255,0.18)" : "#cccccc",
+    cardSurface: isDarkMode ? "rgba(48, 50, 62, 0.85)" : "#f5f5f7",
+    placeholder: isDarkMode ? "#a2a2ab" : "#8E8E93",
+    linkMuted: isDarkMode ? "#c2c2ca" : "#5c6570",
+    accentBlue: isDarkMode ? "#5eb0ff" : "#007AFF",
+    accentEstonian: isDarkMode ? "#ff6961" : "#d73527",
+    sectionTitle: isDarkMode ? "#5eb0ff" : "#007AFF",
   };
 }
 
@@ -138,8 +141,11 @@ export const createNavigationTheme = (isDarkMode: boolean): Theme => ({
 
 export const globalStyles = (isDarkMode: boolean) => {
   const glass = getGlass(isDarkMode);
-  const textPrimary = isDarkMode ? "#f2f2f7" : COLORS.text;
-  const textSecondary = isDarkMode ? "#98989f" : COLORS.secondary;
+  const semantic = semanticColors(isDarkMode);
+  const textPrimary = semantic.textPrimary;
+  const textSecondary = semantic.textSecondary;
+  const accentBlue = semantic.accentBlue;
+  const accentEstonian = semantic.accentEstonian;
 
   return StyleSheet.create({
     searchContainer: {
@@ -258,22 +264,22 @@ export const globalStyles = (isDarkMode: boolean) => {
       paddingVertical: 8,
       borderTopWidth: 0.5,
       borderBottomWidth: 0.5,
-      borderColor: isDarkMode ? "rgba(255,255,255,0.12)" : COLORS.border,
+      borderColor: isDarkMode ? "rgba(255,255,255,0.16)" : COLORS.border,
     },
     exempleEstonien: {
-      color: COLORS.estonien,
+      color: accentEstonian,
     },
     exempleFrancais: {
-      color: COLORS.francais,
+      color: accentBlue,
     },
     exempleDomaine: {
       fontSize: 11,
-      color: COLORS.tertiary,
+      color: textSecondary,
     },
     expressionItem: {
       borderTopWidth: 0.5,
       borderBottomWidth: 0.5,
-      borderColor: isDarkMode ? "rgba(255,255,255,0.12)" : COLORS.border,
+      borderColor: isDarkMode ? "rgba(255,255,255,0.16)" : COLORS.border,
       paddingVertical: 8,
     },
     expressionsContainer: {
@@ -283,10 +289,10 @@ export const globalStyles = (isDarkMode: boolean) => {
       padding: 12,
     },
     expressionEstonienne: {
-      color: COLORS.estonien,
+      color: accentEstonian,
     },
     expressionFrancaise: {
-      color: COLORS.francais,
+      color: accentBlue,
     },
     // Styles pour l'index (liste des mots)
     itemContainer: {
@@ -320,7 +326,7 @@ export const globalStyles = (isDarkMode: boolean) => {
     itemEquivalents: {
       marginTop: 2,
       fontSize: 13,
-      color: COLORS.primary,
+      color: accentBlue,
     },
     itemInfoButton: {
       fontSize: 13,
@@ -372,13 +378,15 @@ export const globalStyles = (isDarkMode: boolean) => {
     indicationSemantique2: {
       fontStyle: "italic",
       fontWeight: "400",
+      color: textPrimary,
     },
     indicationContextuelle: {
       fontStyle: "normal",
       fontWeight: "400",
+      color: textPrimary,
     },
     equivalentsFrancais: {
-      color: COLORS.francais,
+      color: accentBlue,
       fontWeight: "600",
     },
     explicationEquiv: {

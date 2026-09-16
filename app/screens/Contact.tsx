@@ -36,7 +36,7 @@ function createContactStyles(isDark: boolean) {
       padding: 16,
       gap: 4,
       borderWidth: isDark ? 1 : 0,
-      borderColor: isDark ? "rgba(255,255,255,0.1)" : "transparent",
+      borderColor: isDark ? "rgba(255,255,255,0.16)" : "transparent",
     },
     orgName: {
       fontSize: 15,
@@ -50,7 +50,7 @@ function createContactStyles(isDark: boolean) {
       lineHeight: 22,
     },
     url: {
-      color: "#007AFF",
+      color: c.accentBlue,
       marginTop: 8,
     },
   });

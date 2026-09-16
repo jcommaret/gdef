@@ -66,12 +66,12 @@ function createLeProjetStyles(isDark: boolean) {
     sectionTitle: {
       fontSize: 13,
       fontWeight: "700",
-      color: "#007AFF",
+      color: c.sectionTitle,
       textTransform: "uppercase",
       letterSpacing: 0.5,
       marginBottom: 10,
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: "#007AFF",
+      borderBottomColor: c.sectionTitle,
       paddingBottom: 4,
     },
     para: {
@@ -99,7 +99,7 @@ function createLeProjetStyles(isDark: boolean) {
       backgroundColor: c.cardSurface,
       borderRadius: 8,
       borderWidth: isDark ? 1 : 0,
-      borderColor: isDark ? "rgba(255,255,255,0.08)" : "transparent",
+      borderColor: isDark ? "rgba(255,255,255,0.14)" : "transparent",
     },
     logoImage: {
       width: "100%",

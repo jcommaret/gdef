@@ -26,16 +26,16 @@ const GLASS_LIGHT: GlassTokens = {
 };
 
 const GLASS_DARK: GlassTokens = {
-  fill: "rgba(36, 38, 48, 0.72)",
-  fillWeb: "rgba(28, 28, 32, 0.78)",
-  fillMuted: "rgba(30, 32, 40, 0.55)",
-  border: "rgba(255, 255, 255, 0.16)",
-  borderSubtle: "rgba(255, 255, 255, 0.1)",
+  fill: "rgba(36, 38, 48, 0.78)",
+  fillWeb: "rgba(28, 28, 32, 0.82)",
+  fillMuted: "rgba(34, 36, 46, 0.62)",
+  border: "rgba(255, 255, 255, 0.22)",
+  borderSubtle: "rgba(255, 255, 255, 0.14)",
   shadowColor: "#000000",
-  listItemFill: "rgba(44, 46, 58, 0.78)",
-  shineBorder: "rgba(255, 255, 255, 0.12)",
-  shineFill: "rgba(255, 255, 255, 0.04)",
-  headerShine: "rgba(255, 255, 255, 0.06)",
+  listItemFill: "rgba(48, 50, 62, 0.85)",
+  shineBorder: "rgba(255, 255, 255, 0.16)",
+  shineFill: "rgba(255, 255, 255, 0.06)",
+  headerShine: "rgba(255, 255, 255, 0.08)",
 };
 
 /** @deprecated préférer getGlass(isDark) */
